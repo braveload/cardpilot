@@ -85,6 +85,16 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-shinhan-000000': {
+      threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 결제액 구간별 0.1~0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '지방세 납부', keywords: ['지방세', '지방세납부'] },
+        { label: '해외 매출', keywords: ['해외매출', '해외이용', '해외사용'] },
+        { label: '단기카드대출·각종 수수료', keywords: ['단기카드대출', '현금서비스', '각종수수료', '수수료'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=000000&mbkNo=021',
+      sourceTitle: 'BC카드·신한카드 발급 BC TOP포인트카드 공식 상세·적립 구간 및 제외 항목', checkedAt: '2026-09-25'
+    },
     'bc-member-woori-000000': {
       threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 이용금액 구간별 차등)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -926,6 +936,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 167, catalogCardCount: 180, pendingRuleCount: 13, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 168, catalogCardCount: 180, pendingRuleCount: 12, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
