@@ -99,6 +99,19 @@
       source: 'https://www.samsungcard.com/home/card/cardinfo/PGHPPCCCardCardinfoDetails001?click=UHPPCO0101M0_card_PGHPPCCCardCardinfoDetails001_PRD_AAP1824&code=AAP1824',
       sourceTitle: '삼성카드 iD GLOBAL 공식 상세·전월 이용금액 기준 및 제외 대상', checkedAt: '2026-09-25'
     },
+    'samsung-id-one': {
+      threshold: 500000, thresholdLabel: '50만원 (생활영역·관리비·이동통신·교육 적립 등 주요 혜택 기준)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '사회보험·장애인 고용부담금·세금·공과금', keywords: ['건강보험', '국민연금', '고용보험', '산재보험', '장애인 고용부담금', '국세', '지방세', '공과금', '전기요금', '우편요금', '도시가스', '상하수도', '여권 발급', '과태료', '범칙금', '벌금', '공공기관'] },
+        { label: '아파트관리비·부동산 임대료', keywords: ['아파트관리비', '아파트 관리비', '부동산임대료', '임대료'] },
+        { label: '유치원·초중고 납입금·대학 등록금', keywords: ['유치원 납입금', '학교납입금', '초중고', '대학등록금', '대학 등록금'] },
+        { label: '대중교통·택시', keywords: ['대중교통', '후불교통', '모바일교통', '택시'] },
+        { label: '기프트·선불카드·전자지급수단 구매/충전·상품권', keywords: ['기프트카드', '선불카드', '전자지급수단', '사이버머니', '상품권', '포인트충전'] },
+        { label: '카드대출·수수료·이자·연체료·연회비', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '수수료', '이자', '연체료', '연회비'] }
+      ],
+      source: 'https://www.samsungcard.com/home/card/cardinfo/PGHPPCCCardCardinfoDetails001?click=UHPPCO0101M0_card_PGHPPCCCardCardinfoDetails001_PRD_AAP1837&code=AAP1837',
+      sourceTitle: '삼성카드 iD ONE 공식 상세·전월 이용금액 기준 및 제외 대상', checkedAt: '2026-09-25'
+    },
     'lotte-point-plus': {
       threshold: 0, thresholdLabel: '전월 실적 조건 없음 (공식 상품 상세 기준; 기본 현장 적립분의 더블 적립은 별도 서비스 제외조건 적용)', verificationStatus: 'verified', useCommonExclusions: false, extraExclusions: [],
       source: 'https://jiwon3.lottecard.co.kr/app/LPCDADB_V100.lc?vtCdKndC=P00276-A00276',
@@ -855,6 +868,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 160, catalogCardCount: 180, pendingRuleCount: 20, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 161, catalogCardCount: 180, pendingRuleCount: 19, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
