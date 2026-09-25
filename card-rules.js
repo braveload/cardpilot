@@ -319,6 +319,25 @@
       source: 'https://www.shinhancard.com/pconts/html/card/apply/credit/1229296_2207.html',
       sourceTitle: '신한카드 처음 공식 상세·전월 이용금액 산정 및 포인트 적립 제외 기준', checkedAt: '2026-09-25'
     },
+    'bc-member-hana-250818': {
+      threshold: 300000, thresholdLabel: '30만원 (GS칼텍스 주유·영화·생활 적립 서비스 기준)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '전 주유소 이용금액', keywords: ['주유', '주유소', 'gs칼텍스', 'lpg충전'] },
+        { label: '세금·공과금·정부지원금', keywords: ['국세', '지방세', '공과금', '아이행복정부지원금', '정부지원금'] },
+        { label: '상품권·선불·기프트카드 구매/충전', keywords: ['상품권', '선불카드충전', '선불카드 충전', '기프트카드구매', '기프트카드 구매'] },
+        { label: '도시가스·아파트관리비·대학등록금', keywords: ['도시가스', '도시가스요금', '아파트관리비', '대학등록금'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=250818&mbkNo=025',
+      sourceTitle: 'BC카드·하나 부자되세요 The Oil 공식 상품 상세·전월 실적 제외 안내 (신규발급 중단 안내 포함)', checkedAt: '2026-09-25'
+    },
+    'bc-member-hana-250711': {
+      threshold: 300000, thresholdLabel: '30만원 (하나머니·TOP포인트·리프레시 서비스 기준)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '상품권·선불카드 충전·기프트카드 구매', keywords: ['상품권', '선불카드충전', '선불카드 충전', '기프트카드구매', '기프트카드 구매'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=250711&mbkNo=025',
+      sourceTitle: 'BC카드·하나멤버스 1Q카드 Daily BC 공식 상세·지난달 실적 산정 기준', checkedAt: '2026-09-25'
+    },
     'nh-zgm-shopping': { threshold: 500000, thresholdLabel: '50만원 (쇼핑 적립 최소 구간)', verificationStatus: 'verified', extraExclusions: [nhPointUseExclusion, nhCryptoExclusion, nhTransitTaxiExclusion], sourceTitle: 'NH농협카드 zgm shopping 공식 카드 상세·서비스 이용조건', checkedAt: '2026-09-25' },
     'nh-zgm-play': {
       threshold: 300000, thresholdLabel: '30만원 (할인 서비스 최소 구간; 70만원 구간은 한도 상향)', verificationStatus: 'verified',
@@ -776,6 +795,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 152, catalogCardCount: 180, pendingRuleCount: 28, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 154, catalogCardCount: 180, pendingRuleCount: 26, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
