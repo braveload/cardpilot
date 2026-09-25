@@ -85,6 +85,11 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'lotte-point-plus': {
+      threshold: 0, thresholdLabel: '전월 실적 조건 없음 (공식 상품 상세 기준; 기본 현장 적립분의 더블 적립은 별도 서비스 제외조건 적용)', verificationStatus: 'verified', useCommonExclusions: false, extraExclusions: [],
+      source: 'https://jiwon3.lottecard.co.kr/app/LPCDADB_V100.lc?vtCdKndC=P00276-A00276',
+      sourceTitle: '롯데카드 롯데포인트 플러스 공식 상세·더블 적립 제외조건', checkedAt: '2026-09-25'
+    },
     'samsung-id-select-all': {
       threshold: 400000, thresholdLabel: '전월 이용금액 40만원 이상 (선택 할인서비스 기준; 국내 기본 0.7% 할인은 실적 무관)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -836,6 +841,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 158, catalogCardCount: 180, pendingRuleCount: 22, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 159, catalogCardCount: 180, pendingRuleCount: 21, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
