@@ -161,6 +161,21 @@
       source: 'https://www.bccard.com/down/individual/customer/25_asianaclub_220208.pdf',
       sourceTitle: 'BC카드 아시아나클럽카드 공식 상품안내장 (마일리지 적립 및 제외 항목)', checkedAt: '2026-09-25'
     },
+    'bc-member-kb-000000': {
+      threshold: 0, thresholdLabel: '전월 이용실적 구간별 TOP 적립률 (30만원 미만 0.1% · 100만원 미만 0.2% · 100만원 이상 0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '해외 이용금액', keywords: ['해외사용', '해외이용', '해외매출', '해외결제'] },
+        { label: '단기·장기 카드대출', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출'] },
+        { label: '세금·공과금·정부지원금', keywords: ['세금', '국세', '지방세', '공과금', '전기요금', '수도요금', '도시가스', '정부지원금'] },
+        { label: '아파트 관리비·대학/대학원 등록금', keywords: ['아파트관리비', '아파트 관리비', '대학등록금', '대학원등록금'] },
+        { label: '수수료·이자·연체료·연회비', keywords: ['수수료', '이자', '연체료', '연회비'] },
+        { label: '선불카드·상품권 구매 및 충전', keywords: ['선불카드', '선불충전', '상품권'] },
+        { label: '대중교통·항공기내 등 무승인 전표', keywords: ['대중교통', '시내버스', '지하철', '항공기내', '무승인전표'] },
+        { label: '매출 취소금액', keywords: ['취소금액', '매출취소', '취소매출', '거래취소'] }
+      ], conditional: [],
+      source: 'https://card.kbcard.com/CRD/DVIEW/HCAMCXPRICAC0076?cooperationcode=08001',
+      sourceTitle: 'KB국민카드 공식 KB국민 비씨TOP카드 안내 (전월 적립구간·실적 제외대상)', checkedAt: '2026-09-25'
+    },
     'bc-member-shinhan-000000': {
       threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 결제액 구간별 0.1~0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -1012,6 +1027,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 176, catalogCardCount: 180, pendingRuleCount: 4, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 177, catalogCardCount: 180, pendingRuleCount: 3, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
