@@ -85,6 +85,17 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-woori-000000': {
+      threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 이용금액 구간별 차등)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '아파트관리비·임대료·정부지원금', keywords: ['아파트관리비', '임대료', '보육료', '유치원보조비', '정부지원금', '바우처'] },
+        { label: '등록금·세금·공공요금·사회보험·공공기관 이용', keywords: ['대학등록금', '대학원등록금', '국세', '지방세', '공공요금', '공과금', '건강보험', '국민연금', '고용보험', '산재보험', '전기요금', '우편요금', '도시가스요금', '상하수도요금', '과태료', '범칙금', '벌금', '여권발급비용', '국가공공기관', '공공단체'] },
+        { label: '상품권·기프트·선불카드 구매/충전·교통카드 구매/충전', keywords: ['상품권', '기프트카드', '선불카드', '교통카드충전', '교통카드 충전', '교통카드구매', '교통카드 구매'] },
+        { label: '고속버스·수수료·이자·카드대출·무이자할부·취소·정산용 가맹점', keywords: ['고속버스', '수수료', '이자', '단기카드대출', '현금서비스', '무이자할부', '무이자 할부', '매출취소', '취소금액', '정산용가맹점'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=000000&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨TOP포인트카드 공식 상세·포인트 적립 및 제외 기준', checkedAt: '2026-09-25'
+    },
     'bc-member-shinhan-211378': {
       threshold: 200000, thresholdLabel: '20만원 (6대 홈쇼핑·생활 할인 서비스 기준)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -915,6 +926,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 166, catalogCardCount: 180, pendingRuleCount: 14, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 167, catalogCardCount: 180, pendingRuleCount: 13, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
