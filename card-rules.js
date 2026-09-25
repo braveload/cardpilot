@@ -85,6 +85,12 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-hana-251066': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 명시 없음 (해외 2% 적립; ATM 수수료 우대는 전월 사용액·횟수 무관)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=251066&mbkNo=025',
+      sourceTitle: 'BC카드·하나 토스신용카드 공식 상품 상세·해외 적립 및 ATM 우대 기준', checkedAt: '2026-09-25'
+    },
     'bc-member-hana-251008': {
       threshold: 300000, thresholdLabel: '30만원 (카카오T·주유·철도·영화 등 할인 최소 실적; 60만원 구간은 일부 한도 상향)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -898,6 +904,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 164, catalogCardCount: 180, pendingRuleCount: 16, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 165, catalogCardCount: 180, pendingRuleCount: 15, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
