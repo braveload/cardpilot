@@ -43,9 +43,11 @@ a:hover{color:#1B3BB0;}
 table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{padding:11px 12px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}th{background:#f7f8fb;color:#414a5a;position:sticky;top:0}td select,td input{font:inherit;border:1px solid #cbd3df;border-radius:6px;padding:6px;max-width:180px}td .evidence{color:#5b6472;max-width:280px;white-space:normal;line-height:1.5}.muted{color:#6b7385;font-size:13px;line-height:1.6}
 .pagination{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:12px 0}
 .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.issuer-group{margin-top:18px}.issuer-heading{margin:0;font-size:15px;color:#24304a}.product-item{border:1px solid #e4e8ef;border-radius:10px;padding:12px;background:#fff;font-size:13px;line-height:1.5}.product-item a{font-weight:700}.upload-box{border:1px dashed #b8c5dc;border-radius:12px;padding:16px;margin-top:18px;background:#fafbfe}.review-fields{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:6px}.review-fields input{min-width:0;width:100%}
+.catalog-controls{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(240px,1.3fr);gap:12px;margin-top:16px}.catalog-detail{margin-top:12px;padding:14px 16px;border:1px solid #e4e8ef;border-radius:10px;background:#fafbfe}.catalog-detail p{margin:0 0 6px}.catalog-detail a{font-weight:700}
 .compare-option{display:flex;align-items:flex-start;gap:10px;cursor:pointer}.compare-option input{margin:3px 0 0;accent-color:#2451e0;flex:0 0 auto}.comparison-results{overflow-x:auto;margin-top:16px}.comparison-results table{min-width:700px}.comparison-results th,.comparison-results td{padding:12px;text-align:left;border-bottom:1px solid #e4e8ef;vertical-align:top}.comparison-results th{font-size:12px;color:#5b6472;background:#f5f7fa}.comparison-results td{font-size:13px}
 @media(max-width:760px){.tool-wrap{padding:40px 16px}.tool-card{padding:18px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-value{font-size:19px}}
 @media(max-width:600px){.product-grid{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}}
+@media(max-width:600px){.catalog-controls{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -97,11 +99,12 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
       </div>
       <div class="tool-card">
         <div class="notice"><strong>판정 기준 안내</strong><br>공식 상품 안내에서 확인한 카드 규칙만 예상 판정에 사용합니다. 가맹점명만으로 실제 업종코드·할인 적용·정산 결과까지 알 수 없으므로 ‘예상’이며 카드사 최종 실적과 다를 수 있습니다. 애매한 거래는 ‘확인 필요’로 두고 직접 수정해 주세요.</div>
-        <div class="form-row" style="margin-top:18px;">
-          <div class="field"><label for="product-select">확인할 카드 상품</label><select id="product-select"></select></div>
+        <div class="catalog-controls">
+          <div class="field"><label for="issuer-select">카드사</label><select id="issuer-select"></select></div>
+          <div class="field"><label for="product-select">상품</label><select id="product-select"></select></div>
           <div class="summary-card" style="flex:1.5;min-width:240px;"><div class="summary-label">상품 규칙 업데이트</div><div id="product-rule-summary" class="muted">공식 안내 확인 완료 상품부터 순차 지원합니다.</div></div>
         </div>
-        <div id="product-list" class="product-grid" aria-label="상품 목록 및 규칙 확인 상태"></div>
+        <div id="catalog-detail" class="catalog-detail" aria-live="polite"></div>
         <div class="upload-box">
           <h3 style="margin:0 0 6px;font-size:17px;">CSV가 없어도 이용내역 캡처로 확인</h3>
           <p class="muted" style="margin:0 0 12px;">카드사 앱의 거래 목록 화면을 이미지로 선택하세요. 인식된 날짜·가맹점·금액을 확인하고 수정한 뒤 분석합니다. 이름, 카드번호, 계좌번호, 승인번호 등은 먼저 가려 주세요. 인식이 틀릴 수 있으니 원본과 대조해야 합니다.</p>

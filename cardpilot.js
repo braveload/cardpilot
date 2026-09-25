@@ -55,6 +55,13 @@
   function money(value) { return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW', maximumFractionDigits: 0 }).format(value); }
   function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]); }
   function currentProduct() { return products.find((product) => product.id === $('#product-select').value) || products[0]; }
+  function renderCatalogDetail(product) {
+    const detail = $('#catalog-detail');
+    const status = product.verificationStatus === 'pending'
+      ? '실적 판정 규칙 확인 중 · 거래 합산 보류'
+      : `${product.thresholdLabel || (product.threshold ? `전월 실적 기준 ${money(product.threshold)}` : '전월 실적 조건 없음')} · 공식 기준 확인 ${product.checkedAt}`;
+    detail.innerHTML = `<p><strong>${escapeHtml(product.issuer)} · ${escapeHtml(product.name)}</strong></p><p class="muted">${escapeHtml(status)}</p><a href="${escapeHtml(product.source)}" target="_blank" rel="noopener">선택 상품의 공식 안내·규칙 근거 보기 ↗</a>`;
+  }
 
   function classify(transaction, product = currentProduct()) {
     const text = normalize([transaction.merchant, transaction.extra].join(' '));
@@ -170,26 +177,29 @@
     showResults(`${accepted.length}건 거래 후보를 추가했습니다. 인식 결과와 예상 판정을 원본 내역과 대조해 주세요.`);
   }
   function setupProducts() {
-    const select = $('#product-select');
-    products.forEach((product) => { const option = document.createElement('option'); option.value = product.id; option.textContent = `${product.name} · ${product.thresholdLabel || (product.threshold ? `실적 기준 ${money(product.threshold)}` : '전월 실적 조건 없음')}`; select.append(option); });
-    const container = $('#product-list'); container.replaceChildren();
-    [...new Set(products.map((product) => product.issuer))].forEach((issuer) => {
-      const group = document.createElement('section'); group.className = 'issuer-group';
-      const issuerProducts = products.filter((product) => product.issuer === issuer);
-      const heading = document.createElement('h3'); heading.className = 'issuer-heading'; heading.textContent = `${issuer} · ${issuerProducts.length}종`;
-      group.append(heading);
-      const grid = document.createElement('div'); grid.className = 'product-grid';
-      issuerProducts.forEach((product) => {
-        const card = document.createElement('div'); card.className = 'product-item';
-        card.innerHTML = `<strong>${escapeHtml(product.name)}</strong><br><span class="muted">${escapeHtml(product.thresholdLabel || `전월 실적 기준 ${product.threshold ? money(product.threshold) : '없음'}`)} · 확인 ${escapeHtml(product.checkedAt)}</span><br><a href="${escapeHtml(product.source)}" target="_blank" rel="noopener">공식 상품 안내 보기 ↗</a>`; grid.append(card);
+    const issuerSelect = $('#issuer-select');
+    const productSelect = $('#product-select');
+    const issuers = [...new Set(products.map((product) => product.issuer))];
+    issuers.forEach((issuer) => { const option = document.createElement('option'); option.value = issuer; option.textContent = `${issuer} · ${products.filter((product) => product.issuer === issuer).length}종`; issuerSelect.append(option); });
+    function fillProductSelect(issuer, selectedId) {
+      productSelect.replaceChildren();
+      products.filter((product) => product.issuer === issuer).forEach((product) => {
+        const option = document.createElement('option'); option.value = product.id;
+        option.textContent = `${product.name}${product.verificationStatus === 'pending' ? ' · 규칙 확인 중' : ''}`;
+        productSelect.append(option);
       });
-      group.append(grid); container.append(group);
-    });
+      if (selectedId && [...productSelect.options].some((option) => option.value === selectedId)) productSelect.value = selectedId;
+      renderCatalogDetail(currentProduct());
+    }
+    fillProductSelect(issuers[0]);
     const summary = window.CARDPILOT_RULES.summary;
     $('#product-rule-summary').textContent = `상품 목록 ${summary.catalogCardCount}종 등록 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 기준 확인 중 ${summary.pendingRuleCount}종 (은행 BC ${summary.bankBcCardCount} · 삼성 ${summary.samsungCardCount} · 우리 ${summary.wooriCardCount} · 롯데 ${summary.lotteCardCount}). 확인 중 상품은 인정 실적에 합산하지 않습니다.`;
-    select.addEventListener('change', () => {
+    function selectedProductChanged() {
       state.transactions.forEach((item) => classify(item)); updateSummary(); renderRows(); markComparisonStale();
-    });
+      renderCatalogDetail(currentProduct());
+    }
+    issuerSelect.addEventListener('change', () => { fillProductSelect(issuerSelect.value); selectedProductChanged(); });
+    productSelect.addEventListener('change', selectedProductChanged);
     const compareList = $('#compare-products'); compareList.replaceChildren();
     [...new Set(products.map((product) => product.issuer))].forEach((issuer) => {
       const group = document.createElement('section'); group.className = 'issuer-group';
