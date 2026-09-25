@@ -369,6 +369,16 @@
       source: 'https://www.bccard.com/app/card/CardIntdMain.do?gdsno=103881',
       sourceTitle: 'BC카드·광주은행 에듀플러스카드 공식 상세·전월 실적 및 제외 기준', checkedAt: '2026-09-25'
     },
+    'bc-member-gwangju-101497': {
+      threshold: 300000, thresholdLabel: '30만원 (생활·특별 적립 최소 실적; 기본 적립은 실적 무관, 일부 놀이공원 혜택은 20만원)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '무이자할부·카드대출·세금·공과금·사회보험', keywords: ['무이자할부', '현금서비스', '단기카드대출', '카드론', '장기카드대출', '제세공과금', '국세', '지방세', '관세', '과태료', '건강보험', '국민연금', '고용보험', '장애인 고용부담금'] },
+        { label: '관리비·등록금·이자·상품권·선불 충전·취소·후불교통', keywords: ['아파트관리비', '대학교등록금', '대학원등록금', '이자', '기프트카드', '선불카드', '전자지급수단', '상품권', '모바일상품권', '거래취소', '취소금액', '후불교통'] },
+        { label: '연회비·제수수료', keywords: ['연회비', '제수수료', 'sms수수료', '할부수수료', '해외사용수수료'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CardIntdMain.do?gdsno=101497',
+      sourceTitle: 'BC카드·광주은행 HONORS V2 공식 카드 상세·전월 실적 및 제외 조건', checkedAt: '2026-09-25'
+    },
     'nh-zgm-shopping': { threshold: 500000, thresholdLabel: '50만원 (쇼핑 적립 최소 구간)', verificationStatus: 'verified', extraExclusions: [nhPointUseExclusion, nhCryptoExclusion, nhTransitTaxiExclusion], sourceTitle: 'NH농협카드 zgm shopping 공식 카드 상세·서비스 이용조건', checkedAt: '2026-09-25' },
     'nh-zgm-play': {
       threshold: 300000, thresholdLabel: '30만원 (할인 서비스 최소 구간; 70만원 구간은 한도 상향)', verificationStatus: 'verified',
@@ -826,6 +836,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 157, catalogCardCount: 180, pendingRuleCount: 23, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 158, catalogCardCount: 180, pendingRuleCount: 22, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
