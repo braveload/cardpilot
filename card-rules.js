@@ -109,7 +109,22 @@
     extraExclusions: [],
     conditional: [],
     checkedAt: '2026-09-25'
-  }));
+  })).map((product) => product.id === 'shinhan-mrlife' ? {
+    ...product,
+    threshold: 300000,
+    thresholdLabel: '전월 이용금액 30만원 이상 (공과금·TIME·주말 할인 최소 구간)',
+    verificationStatus: 'verified',
+    useCommonExclusions: false,
+    extraExclusions: [
+      { label: '장·단기 카드대출', keywords: ['장기카드대출', '단기카드대출', '카드론', '현금서비스'] },
+      { label: '연회비·수수료·이자', keywords: ['연회비', '수수료', '이자'] },
+      { label: '기프트카드 구매·선불카드 충전', keywords: ['기프트카드', '선불카드충전', '선불카드 충전'] },
+      { label: '거래 취소 금액', keywords: ['거래취소', '거래 취소', '취소금액'] }
+    ],
+    source: 'https://www.shinhancard.com/pconts/html/card/apply/credit/1187937_2207.html?btnApp=dp01&empSeq=87',
+    sourceTitle: '신한카드 Mr.Life 공식 상품 안내 (전월 이용금액 및 제외 기준)',
+    checkedAt: '2026-09-25'
+  } : product);
 
   window.CARDPILOT_RULES = {
     checkedAt: '2026-09-25',
@@ -347,6 +362,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 21, supportedCardCount: 26, catalogCardCount: 180, pendingRuleCount: 154, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 21, supportedCardCount: 27, catalogCardCount: 180, pendingRuleCount: 153, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
