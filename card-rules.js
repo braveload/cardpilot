@@ -338,6 +338,16 @@
       source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=250711&mbkNo=025',
       sourceTitle: 'BC카드·하나멤버스 1Q카드 Daily BC 공식 상세·지난달 실적 산정 기준', checkedAt: '2026-09-25'
     },
+    'bc-member-hana-373986': {
+      threshold: 200000, thresholdLabel: '20만원 (국내 기본 적립·생활 서비스 최소 실적; 구간별 적립률 상향)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '카드대출·수수료·이자·연회비', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '수수료', '이자', '연회비'] },
+        { label: '해외 매출·공과금', keywords: ['해외이용', '해외매출', '국세', '지방세', '공과금', '제세공과금'] },
+        { label: '상품권·선불 충전·대학등록금·관리비·후불교통', keywords: ['상품권', '선불카드', '기프트카드', '포인트충전', '대학등록금', '아파트관리비', '후불교통', '대중교통'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CardIntdMain.do?gdsno=373986',
+      sourceTitle: 'BC카드·하나 그린카드 공식 상세·전월 실적 산정 제외 기준', checkedAt: '2026-09-25'
+    },
     'nh-zgm-shopping': { threshold: 500000, thresholdLabel: '50만원 (쇼핑 적립 최소 구간)', verificationStatus: 'verified', extraExclusions: [nhPointUseExclusion, nhCryptoExclusion, nhTransitTaxiExclusion], sourceTitle: 'NH농협카드 zgm shopping 공식 카드 상세·서비스 이용조건', checkedAt: '2026-09-25' },
     'nh-zgm-play': {
       threshold: 300000, thresholdLabel: '30만원 (할인 서비스 최소 구간; 70만원 구간은 한도 상향)', verificationStatus: 'verified',
@@ -795,6 +805,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 154, catalogCardCount: 180, pendingRuleCount: 26, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 155, catalogCardCount: 180, pendingRuleCount: 25, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
