@@ -179,6 +179,22 @@
       source: 'https://www.bccard.com/down/individual/customer/25_asianaclub_220208.pdf',
       sourceTitle: 'BC카드 아시아나클럽카드 공식 상품안내장 (마일리지 적립 및 제외 항목)', checkedAt: '2026-09-25'
     },
+    'bc-member-hana-000000': {
+      threshold: 0, thresholdLabel: '전월 최소실적 조건 없음 (기본 적립률: 월 이용액 30만원 미만 0.1% · 30~100만원 미만 0.2% · 100만원 이상 0.3%; 특별 적립 별도)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '해외 이용금액', keywords: ['해외사용', '해외이용', '해외매출', '해외결제'] },
+        { label: '국세·지방세 등 세금 납부', keywords: ['국세', '지방세', '세금납부', '제세공과금', '관세'] },
+        { label: '단기카드대출(현금서비스)', keywords: ['현금서비스', '단기카드대출'] },
+        { label: '각종 수수료·이자', keywords: ['각종수수료', '수수료', '이자', '연회비'] },
+        { label: '매출 취소 (취소 접수 월 이용금액에서 차감)', keywords: ['매출취소', '취소매출', '취소금액', '거래취소'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=000000&mbkNo=025',
+      sourceTitle: 'BC카드 하나회원사 비씨TOP포인트카드 공식 상세·적립 구간·취소 처리', checkedAt: '2026-09-25',
+      supportingSources: [
+        { url: 'https://m.hanacard.co.kr/leaflet/BC/BCPT1_20260129.pdf', title: '하나카드 2026 BC 플래티늄 TOP포인트 기준 (국내 일시불·할부, 해외·세금·현금서비스 제외)' },
+        { url: 'https://www.bccard.com/down/individual/customer/500348.pdf', title: 'BC카드 TOP포인트 제공 기준 (해외·현금서비스·수수료·지방세 제외)' }
+      ]
+    },
     'bc-member-kb-000000': {
       threshold: 0, thresholdLabel: '전월 이용실적 구간별 TOP 적립률 (30만원 미만 0.1% · 100만원 미만 0.2% · 100만원 이상 0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -1045,6 +1061,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 179, catalogCardCount: 180, pendingRuleCount: 1, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 180, catalogCardCount: 180, pendingRuleCount: 0, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
