@@ -85,6 +85,36 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-hana-251008': {
+      threshold: 300000, thresholdLabel: '30만원 (카카오T·주유·철도·영화 등 할인 최소 실적; 60만원 구간은 일부 한도 상향)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '세금·공과금·사회보험', keywords: ['국세', '지방세', '공과금', '국민연금', '고용보험', '산재보험', '건강보험', '수도요금', '전기요금', '도시가스'] },
+        { label: '상품권·기프트카드·선불 충전', keywords: ['상품권', '기프트카드', '선불카드', '선불전자지급수단', '하나머니충전', '포인트충전'] },
+        { label: '아파트관리비·등록금·초중고 납입금', keywords: ['아파트관리비', '대학교등록금', '대학등록금', '초중고', '학교납입금'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=251008&mbkNo=025',
+      sourceTitle: 'BC카드·하나 카카오T 카드 공식 상세·전월 실적 산정 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-hana-366663': {
+      threshold: 300000, thresholdLabel: '30만원 (KT 통신요금 할인 최소 실적; 콘텐츠 쿠폰은 70만원 기준)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '세금·공과금·사회보험·공공기관', keywords: ['국세', '지방세', '공과금', '건강보험', '국민연금', '고용보험', '산재보험', '상하수도', '전기요금', '도시가스', '과태료', '벌금', '범칙금', '공공기관'] },
+        { label: '상품권·선불/기프트 충전·무이자할부', keywords: ['상품권', '선불카드', '선불충전', '기프트카드', '무이자할부'] },
+        { label: '등록금·관리비·정부지원금·카드대출·수수료', keywords: ['대학교등록금', '대학등록금', '아파트관리비', '아이행복정부지원금', '현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=366663&mbkNo=025',
+      sourceTitle: 'BC카드·하나 KT SUPER DC 카드 공식 상세·전월 실적 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-hana-366651': {
+      threshold: 300000, thresholdLabel: '30만원 (KT 통신요금 할인 최소 실적; 라이트할부 할인은 70만원 구간 상향)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '세금·공과금·사회보험·공공기관', keywords: ['국세', '지방세', '공과금', '건강보험', '국민연금', '고용보험', '산재보험', '상하수도', '전기요금', '도시가스', '과태료', '벌금', '범칙금', '공공기관'] },
+        { label: '상품권·선불/기프트 충전·무이자할부', keywords: ['상품권', '선불카드', '선불충전', '기프트카드', '무이자할부'] },
+        { label: '등록금·관리비·정부지원금·카드대출·수수료', keywords: ['대학교등록금', '대학등록금', '아파트관리비', '아이행복정부지원금', '현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=366651&mbkNo=025',
+      sourceTitle: 'BC카드·하나 KT SUPER 할부카드 공식 상세·전월 실적 제외 기준', checkedAt: '2026-09-25'
+    },
     'samsung-id-global': {
       threshold: 500000, thresholdLabel: '50만원 (인앱결제·디지털콘텐츠·멤버십 등 국내 할인 최소 실적; 해외 혜택은 실적 무관)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -868,6 +898,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 161, catalogCardCount: 180, pendingRuleCount: 19, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 164, catalogCardCount: 180, pendingRuleCount: 16, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
