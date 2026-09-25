@@ -348,6 +348,17 @@
       source: 'https://www.bccard.com/app/card/CardIntdMain.do?gdsno=373986',
       sourceTitle: 'BC카드·하나 그린카드 공식 상세·전월 실적 산정 제외 기준', checkedAt: '2026-09-25'
     },
+    'bc-member-suhyup-100644': {
+      threshold: 300000, thresholdLabel: '30만원 (국내 청구할인 최소 실적; 70만원 이상 할인율 상향)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '관리비·등록금·후불교통', keywords: ['아파트관리비', '대학교등록금', '대학원등록금', '후불교통', '버스', '지하철'] },
+        { label: '카드대출·세금·공과금·사회보험·범칙금', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '국세', '지방세', '제세공과금', '4대보험', '과태료'] },
+        { label: '상품권·선불 충전·취소·임대료·교육비·무이자할부', keywords: ['상품권', '선불카드', '기프트카드', '매출취소', '취소금액', 'LH토지공사', '임대료', '초중고교 학부모 부담금', '무이자할부'] },
+        { label: '타 카드 매출·해외이용·신차구매·생활요금·이자·연회비·수수료', keywords: ['다른 카드 매출', '해외가맹점', '해외이용', '신차구매', '도시가스', '전기요금', 'TV수신료', '이자', '연회비', '수수료'] }
+      ],
+      source: 'https://www.bccard.com/app/card/CardIntdMain.do?gdsno=100644',
+      sourceTitle: 'BC카드·Sh수협 Real?Real! 2 공식 상세·전월 실적 산정 제외 기준', checkedAt: '2026-09-25'
+    },
     'nh-zgm-shopping': { threshold: 500000, thresholdLabel: '50만원 (쇼핑 적립 최소 구간)', verificationStatus: 'verified', extraExclusions: [nhPointUseExclusion, nhCryptoExclusion, nhTransitTaxiExclusion], sourceTitle: 'NH농협카드 zgm shopping 공식 카드 상세·서비스 이용조건', checkedAt: '2026-09-25' },
     'nh-zgm-play': {
       threshold: 300000, thresholdLabel: '30만원 (할인 서비스 최소 구간; 70만원 구간은 한도 상향)', verificationStatus: 'verified',
@@ -805,6 +816,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 155, catalogCardCount: 180, pendingRuleCount: 25, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 156, catalogCardCount: 180, pendingRuleCount: 24, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
