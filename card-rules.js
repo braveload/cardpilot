@@ -85,6 +85,53 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-woori-242266': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 없음 (국내 가맹점 2,000원당 Yard 적립)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '매출 취소·단기카드대출', keywords: ['매출취소', '카드이용매출취소', '단기카드대출', '현금서비스'] },
+        { label: '해외 이용금액', keywords: ['해외이용금액', '해외매출', '해외이용'] },
+        { label: '국세·지방세 등 세금 업종', keywords: ['국세', '지방세', '세금업종', '세금납부'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=242266&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨 다이아몬드 골프야드 공식 상세·Yard 적립 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-woori-242241': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 없음 (개인회원 국내외 이용액 1,500원당 2마일)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '매출 취소·단기카드대출', keywords: ['카드이용매출취소', '매출취소', '단기카드대출', '현금서비스'] },
+        { label: '해외 이용금액', keywords: ['해외이용금액', '해외매출', '해외이용'] },
+        { label: '국세·지방세 등 세금 업종', keywords: ['국세', '지방세', '세금업종', '세금납부'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=242241&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨 다이아몬드 스카이패스 공식 상세·마일리지 적립 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-woori-225005': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 없음 (국내 일시불·할부 기본 TOP포인트 1% 적립)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '해외 이용금액·단기카드대출·수수료·지방세', keywords: ['해외이용액', '해외매출', '해외이용', '단기카드대출', '현금서비스', '각종수수료', '수수료', '지방세'] },
+        { label: '매출 취소금액', keywords: ['매출취소', '취소금액', '거래취소'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=225005&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨 인피니트 TOP 공식 상세·포인트 적립 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-woori-225021': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 없음 (개인회원 국내외 이용액 1,500원당 2마일)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '매출 취소·단기카드대출', keywords: ['카드이용매출취소', '매출취소', '단기카드대출', '현금서비스'] },
+        { label: '국세·지방세 등 세금 업종', keywords: ['국세', '지방세', '세금업종', '세금납부'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=225021&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨 인피니트 아시아나클럽 공식 상세·마일리지 적립 제외 기준', checkedAt: '2026-09-25'
+    },
+    'bc-member-woori-225018': {
+      threshold: 0, thresholdLabel: '전월 실적 기준 없음 (개인회원 국내외 이용액 1,500원당 2마일)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '매출 취소·단기카드대출', keywords: ['카드이용매출취소', '매출취소', '단기카드대출', '현금서비스'] },
+        { label: '국세·지방세 등 세금 업종', keywords: ['국세', '지방세', '세금업종', '세금납부'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=225018&mbkNo=020',
+      sourceTitle: 'BC카드·우리카드 발급 비씨 인피니트 스카이패스 공식 상세·마일리지 적립 제외 기준', checkedAt: '2026-09-25'
+    },
     'bc-member-shinhan-000000': {
       threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 결제액 구간별 0.1~0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -936,6 +983,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 168, catalogCardCount: 180, pendingRuleCount: 12, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 173, catalogCardCount: 180, pendingRuleCount: 7, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
