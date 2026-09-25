@@ -42,7 +42,10 @@ a:hover{color:#1B3BB0;}
 .table-wrap{overflow:auto;border:1px solid #e4e8ef;border-radius:12px;margin-top:16px}
 table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{padding:11px 12px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}th{background:#f7f8fb;color:#414a5a;position:sticky;top:0}td select,td input{font:inherit;border:1px solid #cbd3df;border-radius:6px;padding:6px;max-width:180px}td .evidence{color:#5b6472;max-width:280px;white-space:normal;line-height:1.5}.muted{color:#6b7385;font-size:13px;line-height:1.6}
 .pagination{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:12px 0}
+.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.issuer-group{margin-top:18px}.issuer-heading{margin:0;font-size:15px;color:#24304a}.product-item{border:1px solid #e4e8ef;border-radius:10px;padding:12px;background:#fff;font-size:13px;line-height:1.5}.product-item a{font-weight:700}.upload-box{border:1px dashed #b8c5dc;border-radius:12px;padding:16px;margin-top:18px;background:#fafbfe}.review-fields{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:6px}.review-fields input{min-width:0;width:100%}
+.compare-option{display:flex;align-items:flex-start;gap:10px;cursor:pointer}.compare-option input{margin:3px 0 0;accent-color:#2451e0;flex:0 0 auto}.comparison-results{overflow-x:auto;margin-top:16px}.comparison-results table{min-width:700px}.comparison-results th,.comparison-results td{padding:12px;text-align:left;border-bottom:1px solid #e4e8ef;vertical-align:top}.comparison-results th{font-size:12px;color:#5b6472;background:#f5f7fa}.comparison-results td{font-size:13px}
 @media(max-width:760px){.tool-wrap{padding:40px 16px}.tool-card{padding:18px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-value{font-size:19px}}
+@media(max-width:600px){.product-grid{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -57,7 +60,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
         </div>
         <span style="font-size:19px;font-weight:900;letter-spacing:-0.02em;">카드파일럿</span>
       </div>
-      <a class="header-cta" href="#analyzer" style="background:#2451E0;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:700;">CSV 분석 시작</a>
+      <a class="header-cta" href="#analyzer" style="background:#2451E0;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:700;">내역 분석 시작</a>
     </div>
   </header>
 
@@ -70,7 +73,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
         분명 50만 원 넘게 썼는데,<br>왜 이번 달 카드 할인이 안 들어왔을까?
       </h1>
       <p style="margin:0;font-size:17px;line-height:1.7;color:#5B6472;max-width:560px;">
-        카드 이용내역 CSV를 불러와 열을 확인하고, 거래별 판정과 근거를 직접 검토하세요.<br>파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.
+        카드사에서 내려받은 CSV나 이용내역 화면 캡처를 확인해 거래별 예상 판정과 근거를 검토하세요.<br>파일은 브라우저에서 처리되며 서버로 전송하지 않습니다.
       </p>
 
       <div style="margin-top:16px;width:100%;max-width:560px;background:#F9FAFC;border:2px dashed #C7D2E6;border-radius:16px;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:14px;">
@@ -78,8 +81,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div style="font-size:15px;font-weight:700;">아래에서 CSV 분석을 시작할 수 있습니다</div>
-        <div style="font-size:13px;color:#8A93A6;">CSV 형식 지원 · 업로드 파일은 브라우저에서만 처리</div>
+        <div style="font-size:15px;font-weight:700;">CSV 또는 내역 화면 캡처로 시작하세요</div>
+        <div style="font-size:13px;color:#8A93A6;">CSV 분석 · 한국어 이미지 문자 인식 · 브라우저 내 처리</div>
       </div>
 
       <a href="#analyzer" style="margin-top:4px;font-size:14px;font-weight:700;color:#2451E0;border-bottom:1px solid #2451E0;padding-bottom:2px;">내 CSV 분석하기 →</a>
@@ -90,10 +93,22 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
     <div class="tool-wrap">
       <div style="text-align:center;margin-bottom:28px;">
         <h2 class="section-title" style="margin:0 0 10px;font-size:30px;font-weight:900;">카드 이용내역 분석</h2>
-        <p class="muted" style="margin:0;">CSV 선택 → 열 확인 → 거래 검토 → 인정 실적 합산</p>
+        <p class="muted" style="margin:0;">CSV/캡처 선택 → 거래 확인 → 규칙 근거 검토 → 실적 합산</p>
       </div>
       <div class="tool-card">
-        <div class="notice"><strong>판정 기준 안내</strong><br>현재 카드별 공식 실적 규칙은 등록되어 있지 않습니다. 따라서 자동으로 인정·제외를 단정하지 않고 모든 거래를 ‘확인 필요’로 표시합니다. 거래별로 직접 판정하면 인정액이 즉시 다시 계산됩니다. 카드사 공식 판정이 아닌 사용자 검토용입니다.</div>
+        <div class="notice"><strong>판정 기준 안내</strong><br>공식 상품 안내에서 확인한 카드 규칙만 예상 판정에 사용합니다. 가맹점명만으로 실제 업종코드·할인 적용·정산 결과까지 알 수 없으므로 ‘예상’이며 카드사 최종 실적과 다를 수 있습니다. 애매한 거래는 ‘확인 필요’로 두고 직접 수정해 주세요.</div>
+        <div class="form-row" style="margin-top:18px;">
+          <div class="field"><label for="product-select">확인할 카드 상품</label><select id="product-select"></select></div>
+          <div class="summary-card" style="flex:1.5;min-width:240px;"><div class="summary-label">상품 규칙 업데이트</div><div id="product-rule-summary" class="muted">공식 안내 확인 완료 상품부터 순차 지원합니다.</div></div>
+        </div>
+        <div id="product-list" class="product-grid" aria-label="공식 확인 카드 목록"></div>
+        <div class="upload-box">
+          <h3 style="margin:0 0 6px;font-size:17px;">CSV가 없어도 이용내역 캡처로 확인</h3>
+          <p class="muted" style="margin:0 0 12px;">카드사 앱의 거래 목록 화면을 이미지로 선택하세요. 인식된 날짜·가맹점·금액을 확인하고 수정한 뒤 분석합니다. 이름, 카드번호, 계좌번호, 승인번호 등은 먼저 가려 주세요. 인식이 틀릴 수 있으니 원본과 대조해야 합니다.</p>
+          <div class="form-row"><div class="field"><label for="statement-images">이용내역 캡처 이미지 (최대 5장)</label><input id="statement-images" type="file" accept="image/*" multiple></div><button class="btn secondary" id="read-images" type="button">캡처 읽기</button></div>
+          <p id="image-status" class="muted" aria-live="polite">이미지 OCR을 시작할 때 한국어 인식 엔진을 불러옵니다. 이미지 파일은 이 브라우저에서 직접 읽습니다.</p>
+          <div id="ocr-review" hidden><label for="ocr-text" class="muted">인식 결과 (필요하면 텍스트를 고친 후 아래 거래 추출)</label><textarea id="ocr-text" rows="7" style="width:100%;font:inherit;border:1px solid #cbd3df;border-radius:8px;padding:10px;"></textarea><div style="margin-top:10px;"><button class="btn" id="extract-images" type="button">거래 후보 추출 및 분석</button></div></div>
+        </div>
         <div class="form-row" style="margin-top:20px;">
           <div class="field"><label for="csv-file">거래내역 CSV 파일</label><input id="csv-file" type="file" accept=".csv,text/csv"></div>
           <button class="btn" id="load-csv" type="button">CSV 불러오기</button>
@@ -112,18 +127,28 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
         </div>
         <div id="results" hidden>
           <div class="tool-grid" style="margin-top:28px;">
-            <div class="summary-card"><div class="summary-label">확인된 인정 실적</div><div class="summary-value" id="sum-included">₩0</div></div>
-            <div class="summary-card"><div class="summary-label">제외 거래 합계</div><div class="summary-value" id="sum-excluded">₩0</div></div>
+            <div class="summary-card"><div class="summary-label">인정 예상 합계</div><div class="summary-value" id="sum-included">₩0</div></div>
+            <div class="summary-card"><div class="summary-label">제외 예상 합계</div><div class="summary-value" id="sum-excluded">₩0</div></div>
             <div class="summary-card"><div class="summary-label">확인 필요 금액</div><div class="summary-value" id="sum-pending">₩0</div></div>
             <div class="summary-card"><div class="summary-label">전체 거래</div><div class="summary-value" id="sum-count">0건</div></div>
           </div>
+          <section style="margin-top:24px;padding:20px;border:1px solid #dbe3f0;border-radius:14px;background:#fafbfe;">
+            <h3 style="margin:0;font-size:18px;">여러 카드 통합 비교</h3>
+            <p class="muted">비교할 상품을 2개 이상 고르면 같은 거래내역을 각 카드 규칙으로 따로 판정합니다. 카드 규칙은 공식 안내의 등록된 항목을 기준으로 한 예상치입니다.</p>
+            <div id="compare-products" aria-label="비교할 카드 상품 선택"></div>
+            <button class="btn" id="compare-cards" type="button" style="margin-top:16px;">선택한 카드 비교</button>
+            <p class="muted" id="comparison-status" aria-live="polite">카드 상품을 선택한 뒤 비교를 눌러 주세요.</p>
+            <div id="comparison-results" class="comparison-results" hidden>
+              <table><thead><tr><th>카드 상품</th><th>인정 예상</th><th>제외 예상</th><th>확인 필요</th><th>전월 실적 참고</th></tr></thead><tbody id="comparison-rows"></tbody></table>
+            </div>
+          </section>
           <div class="form-row" style="margin-top:24px;align-items:center;">
             <h3 style="margin:0;font-size:18px;flex:1;">거래별 판정 및 근거</h3>
             <input class="search-box" id="filter-rows" type="search" placeholder="가맹점·근거 검색" aria-label="거래 검색">
             <button class="btn secondary" id="clear-analysis" type="button">분석 초기화</button>
           </div>
-          <p class="muted">판정을 바꾸면 합계가 즉시 재계산됩니다. ‘인정’ 금액은 사용자가 직접 확인해 선택한 거래의 합계이며, 공식 카드사 판정값이 아닙니다.</p>
-          <div class="table-wrap"><table><thead><tr><th>행</th><th>이용일</th><th>가맹점</th><th>금액</th><th>판정</th><th>근거 / 메모</th></tr></thead><tbody id="transaction-rows"></tbody></table></div>
+          <p class="muted">날짜·가맹점·금액을 직접 고친 뒤 판정을 선택하면 합계가 다시 계산됩니다. ‘인정 예상’은 공식 카드사 확정값이 아닙니다.</p>
+          <div class="table-wrap"><table><thead><tr><th>출처</th><th>거래 정보 수정 (날짜 · 가맹점 · 금액)</th><th>판정</th><th>근거 / 메모</th></tr></thead><tbody id="transaction-rows"></tbody></table></div>
           <div class="pagination"><button class="btn secondary" id="previous-page" type="button">이전</button><span id="page-label" class="muted"></span><button class="btn secondary" id="next-page" type="button">다음</button></div>
           <p class="muted">CSV를 닫거나 새로고침하면 분석 데이터가 사라집니다. 원본 CSV는 변경되지 않습니다.</p>
         </div>
@@ -187,8 +212,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
 
         <div style="display:flex;flex-direction:column;gap:14px;">
           <div style="width:36px;height:36px;border-radius:50%;background:#2451E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;">2</div>
-          <div style="font-size:16px;font-weight:700;">드래그 앤 드롭</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">CSV 파일을 브라우저에서 읽고 가맹점명·금액 열을 직접 확인합니다.</div>
+          <div style="font-size:16px;font-weight:700;">CSV 또는 내역 캡처 선택</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">CSV는 열을 확인하고, 캡처는 OCR로 읽힌 내용을 검토·수정한 뒤 거래로 추가합니다.</div>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:14px;">
@@ -205,7 +230,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
     <div style="max-width:1120px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:48px;">
       <div style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;">
         <h2 class="section-title" style="margin:0;font-size:30px;font-weight:900;letter-spacing:-0.02em;">추측이 아니라, 근거로 판정합니다</h2>
-        <p style="margin:0;font-size:15px;color:#5B6472;max-width:640px;">현재는 사용자가 선택한 거래 판정과 CSV 원본 행 정보를 근거로 보여줍니다. 카드별 공식 규칙은 등록 전까지 자동 적용하지 않습니다.</p>
+        <p style="margin:0;font-size:15px;color:#5B6472;max-width:640px;">확인된 카드의 공식 상품 안내를 기준으로 예상 판정과 거래별 근거를 표시합니다. 가맹점 업종코드·실제 할인 적용은 알 수 없어 불확실한 내용은 사용자가 확인해야 합니다.</p>
       </div>
 
       <div class="comparison-scroll" style="background:#FFFFFF;border:1px solid #E4E8EF;border-radius:16px;">
@@ -220,35 +245,35 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">실적 집계</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">O (결과값만)</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">소비분류 중심, 실적 미반영</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O</div>
+          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">등록 상품 예상 집계</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">판정 근거 표시</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (CSV 원본행·수동 메모)</div>
+          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">공식 출처·규칙 근거 표시</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">여러 카드 통합 비교</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">X (자사 카드만)</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">소비 항목 기준으로만</div>
-          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">현재 미지원</div>
+          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">선택한 상품별 동일 내역 동시 비교</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">수동 수정 / 재계산</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (사용자 판정 후)</div>
+          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">거래 수정 시 재판정·합산</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">카드사별 규칙 최신화</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">자사만</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">미반영</div>
-          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">현재 미지원</div>
+          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">3개 카드사 · 26종 지원 · 나머지 순차 추가</div>
         </div>
         </div>
       </div>
@@ -269,7 +294,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
     <div style="max-width:1120px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:48px;">
         <div style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;">
         <h2 class="section-title" style="margin:0;font-size:30px;font-weight:900;letter-spacing:-0.02em;">이용 데이터 처리 안내</h2>
-        <p style="margin:0;font-size:15px;color:#5B6472;">현재 제공되는 CSV 분석 방식에 대한 안내입니다.</p>
+        <p style="margin:0;font-size:15px;color:#5B6472;">CSV와 캡처 분석은 브라우저에서 처리합니다. 캡처는 개인정보를 가린 뒤 사용하세요.</p>
       </div>
       <div class="three-grid" style="gap:20px;">
 
@@ -285,8 +310,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <div style="width:44px;height:44px;border-radius:12px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z" stroke-linejoin="round"/></svg>
           </div>
-          <div style="font-size:16px;font-weight:700;">CSV 서버 전송 없음</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">선택한 파일의 내용은 현재 분석을 위해 이 브라우저에서만 읽으며 서버로 전송하지 않습니다.</div>
+          <div style="font-size:16px;font-weight:700;">거래 파일 서버 전송 없음</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">CSV와 캡처 이미지는 브라우저에서 직접 읽고 서버에 저장하지 않습니다. 이미지 OCR 때 인식 엔진과 한국어 모델을 CDN에서 불러옵니다.</div>
         </div>
 
         <div style="background:#F5F7FA;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;">
@@ -306,8 +331,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
       <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(36,81,224,0.18);color:#8FA8F5;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">
         서비스 문의
       </div>
-      <h2 style="margin:0;font-size:32px;font-weight:900;color:#fff;letter-spacing:-0.02em;">카드별 규칙 등록과<br>개선 의견을 보내주세요</h2>
-      <p style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">카드별 공식 규칙은 현재 미등록 상태입니다. 지원을 원하는 카드와 오류·개선 의견을 하루한칸 문의폼으로 알려주세요.</p>
+      <h2 style="margin:0;font-size:32px;font-weight:900;color:#fff;letter-spacing:-0.02em;">카드 규칙은 계속<br>확인하고 업데이트합니다</h2>
+      <p style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">현재 공식 자료로 확인한 BC 바로카드 6종, KB국민카드 10종, 현대카드 10종을 지원합니다. 다른 후보 상품은 공식 약관 대조 후 순차 추가할 예정입니다. 지원 카드와 규칙 오류 제보를 환영합니다.</p>
 
       <a href="https://haru-hankan.onrender.com/#contact" style="margin-top:12px;width:100%;max-width:420px;padding:15px 22px;border-radius:8px;background:#2451E0;color:#fff;font-size:15px;font-weight:700;">하루한칸 문의폼 열기</a>
       <nav aria-label="관련 링크" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:20px;font-size:13px;">
@@ -315,7 +340,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
         <a href="https://haru-hankan.onrender.com/privacy.html" style="color:#AAB2C5;text-decoration:underline;">개인정보처리방침</a>
         <a href="https://haru-hankan.onrender.com/terms.html" style="color:#AAB2C5;text-decoration:underline;">서비스 이용 안내</a>
       </nav>
-      <p style="margin:0;font-size:12px;color:#6B7385;">현재 카드별 공식 실적 판정은 지원하지 않으며, 거래별 수동 검토 및 합산 기능을 제공합니다.</p>
+      <p style="margin:0;font-size:12px;color:#6B7385;">자동 판정은 카드사 확정 결과가 아닌 상품설명서 키워드 기반 예상입니다. 실제 업종코드나 이벤트 조건은 카드사에서 확인해 주세요.</p>
     </div>
   </section>
 
@@ -328,6 +353,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
 
 </div>
 
+<script src="card-rules.js" defer></script>
 <script src="cardpilot.js" defer></script>
 
 </body>
