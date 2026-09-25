@@ -132,6 +132,24 @@
       source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=225018&mbkNo=020',
       sourceTitle: 'BC카드·우리카드 발급 비씨 인피니트 스카이패스 공식 상세·마일리지 적립 제외 기준', checkedAt: '2026-09-25'
     },
+    'bc-member-woori-220013': {
+      threshold: 200000, thresholdLabel: '전월 국내 일시불·할부 20만원 이상 (카드 등록 후 1개월은 실적 무관 제공)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '해외 이용금액 (전월 국내 실적 산정 대상 아님)', keywords: ['해외이용', '해외매출', '해외사용', '해외결제'] },
+        { label: '취소 매출표 접수 월의 취소 금액', keywords: ['매출취소', '취소매출', '취소금액', '거래취소'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=220013&mbkNo=020',
+      sourceTitle: 'BC카드 공식 TnT카드 상세 (우리카드 발급 기준·국내 실적 및 취소 처리)', checkedAt: '2026-09-25'
+    },
+    'bc-member-hana-220013': {
+      threshold: 300000, thresholdLabel: '전월 국내 일시불·할부 30만원 이상 (카드 등록 후 1개월은 실적 무관 제공)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '해외 이용금액 (전월 국내 실적 산정 대상 아님)', keywords: ['해외이용', '해외매출', '해외사용', '해외결제'] },
+        { label: '취소 매출표 접수 월의 취소 금액', keywords: ['매출취소', '취소매출', '취소금액', '거래취소'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=220013&mbkNo=020',
+      sourceTitle: 'BC카드 공식 TnT카드 상세 (하나은행 발급 시 30만원 기준·국내 실적 및 취소 처리)', checkedAt: '2026-09-25'
+    },
     'bc-member-shinhan-000000': {
       threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 결제액 구간별 0.1~0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -983,6 +1001,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 173, catalogCardCount: 180, pendingRuleCount: 7, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 175, catalogCardCount: 180, pendingRuleCount: 5, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
