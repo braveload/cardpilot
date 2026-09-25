@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>카드파일럿 — 베타 준비 안내</title>
-<meta name="description" content="카드사마다 다른 전월실적 제외 규칙을 CSV 업로드로 판정하는 카드파일럿의 베타 준비 안내 페이지">
+<title>카드파일럿 — 카드 실적 CSV 분석</title>
+<meta name="description" content="카드 이용내역 CSV를 브라우저에서 분석하고 거래별 판정, 근거, 인정 실적을 확인하세요.">
 <link rel="canonical" href="https://braveload.github.io/cardpilot/">
 <meta name="theme-color" content="#2451E0">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://braveload.github.io/cardpilot/">
 <meta property="og:title" content="카드파일럿 — 카드 실적 판정 도우미">
-<meta property="og:description" content="카드별 전월 실적 규칙을 거래별 근거와 함께 확인하는 서비스를 준비하고 있습니다.">
+<meta property="og:description" content="카드 이용내역 CSV를 분석하고 거래별 판정과 인정 실적을 확인하세요.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;}
@@ -27,6 +27,22 @@ a:hover{color:#1B3BB0;}
   .section-title{font-size:25px!important;}
   .header-cta{display:none;}
 }
+.tool-wrap{max-width:1120px;margin:0 auto;padding:64px 24px;}
+.tool-card{background:#fff;border:1px solid #e4e8ef;border-radius:18px;padding:28px;box-shadow:0 8px 28px rgba(18,23,43,.05)}
+.tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.summary-card{border:1px solid #e4e8ef;border-radius:12px;padding:16px;background:#fff}
+.summary-label{font-size:13px;color:#5b6472}.summary-value{font-size:23px;font-weight:900;margin-top:6px}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.field{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
+.field label{font-size:13px;font-weight:700;color:#414a5a}
+.field select,.field input,.search-box{font:inherit;border:1px solid #cbd3df;border-radius:8px;padding:10px 11px;background:#fff;color:#12172b;min-height:42px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;background:#2451e0;color:white;padding:11px 18px;cursor:pointer}
+.btn.secondary{background:#edf1f8;color:#24304a}.btn:disabled{opacity:.5;cursor:not-allowed}
+.notice{border-radius:10px;padding:14px 16px;background:#fff8e7;color:#684a00;font-size:14px;line-height:1.6}
+.table-wrap{overflow:auto;border:1px solid #e4e8ef;border-radius:12px;margin-top:16px}
+table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{padding:11px 12px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}th{background:#f7f8fb;color:#414a5a;position:sticky;top:0}td select,td input{font:inherit;border:1px solid #cbd3df;border-radius:6px;padding:6px;max-width:180px}td .evidence{color:#5b6472;max-width:280px;white-space:normal;line-height:1.5}.muted{color:#6b7385;font-size:13px;line-height:1.6}
+.pagination{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:12px 0}
+@media(max-width:760px){.tool-wrap{padding:40px 16px}.tool-card{padding:18px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-value{font-size:19px}}
 </style>
 </head>
 <body>
@@ -41,20 +57,20 @@ a:hover{color:#1B3BB0;}
         </div>
         <span style="font-size:19px;font-weight:900;letter-spacing:-0.02em;">카드파일럿</span>
       </div>
-      <a class="header-cta" href="#beta" style="background:#2451E0;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:700;">베타 참여 문의</a>
+      <a class="header-cta" href="#analyzer" style="background:#2451E0;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:700;">CSV 분석 시작</a>
     </div>
   </header>
 
   <section style="width:100%;background:#FFFFFF;">
     <div style="max-width:1120px;margin:0 auto;padding:96px 24px 88px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;">
       <div style="display:inline-flex;align-items:center;gap:6px;background:#ECF1FE;color:#2451E0;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">
-        베타 준비 중
+        브라우저에서 바로 분석
       </div>
       <h1 class="hero-title" style="margin:0;font-size:44px;line-height:1.35;font-weight:900;letter-spacing:-0.02em;max-width:760px;">
         분명 50만 원 넘게 썼는데,<br>왜 이번 달 카드 할인이 안 들어왔을까?
       </h1>
       <p style="margin:0;font-size:17px;line-height:1.7;color:#5B6472;max-width:560px;">
-        카드사마다 다른 전월실적 규칙을 거래별 근거와 함께 확인할 수 있도록 준비하고 있습니다.<br>첫 베타에서 지원할 카드와 파일 형식은 사전 신청자와 함께 검증합니다.
+        카드 이용내역 CSV를 불러와 열을 확인하고, 거래별 판정과 근거를 직접 검토하세요.<br>파일은 이 브라우저 안에서만 처리되며 서버로 전송되지 않습니다.
       </p>
 
       <div style="margin-top:16px;width:100%;max-width:560px;background:#F9FAFC;border:2px dashed #C7D2E6;border-radius:16px;padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:14px;">
@@ -62,11 +78,56 @@ a:hover{color:#1B3BB0;}
           <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div style="font-size:15px;font-weight:700;">CSV 업로드 화면 예시</div>
-        <div style="font-size:13px;color:#8A93A6;">실제 업로드 기능은 베타에서 제공할 예정입니다</div>
+        <div style="font-size:15px;font-weight:700;">아래에서 CSV 분석을 시작할 수 있습니다</div>
+        <div style="font-size:13px;color:#8A93A6;">CSV 형식 지원 · 업로드 파일은 브라우저에서만 처리</div>
       </div>
 
-      <a href="#beta" style="margin-top:4px;font-size:14px;font-weight:700;color:#2451E0;border-bottom:1px solid #2451E0;padding-bottom:2px;">베타 참여 문의하기 →</a>
+      <a href="#analyzer" style="margin-top:4px;font-size:14px;font-weight:700;color:#2451E0;border-bottom:1px solid #2451E0;padding-bottom:2px;">내 CSV 분석하기 →</a>
+    </div>
+  </section>
+
+  <section id="analyzer" style="width:100%;background:#F5F7FA;">
+    <div class="tool-wrap">
+      <div style="text-align:center;margin-bottom:28px;">
+        <h2 class="section-title" style="margin:0 0 10px;font-size:30px;font-weight:900;">카드 이용내역 분석</h2>
+        <p class="muted" style="margin:0;">CSV 선택 → 열 확인 → 거래 검토 → 인정 실적 합산</p>
+      </div>
+      <div class="tool-card">
+        <div class="notice"><strong>판정 기준 안내</strong><br>현재 카드별 공식 실적 규칙은 등록되어 있지 않습니다. 따라서 자동으로 인정·제외를 단정하지 않고 모든 거래를 ‘확인 필요’로 표시합니다. 거래별로 직접 판정하면 인정액이 즉시 다시 계산됩니다. 카드사 공식 판정이 아닌 사용자 검토용입니다.</div>
+        <div class="form-row" style="margin-top:20px;">
+          <div class="field"><label for="csv-file">거래내역 CSV 파일</label><input id="csv-file" type="file" accept=".csv,text/csv"></div>
+          <button class="btn" id="load-csv" type="button">CSV 불러오기</button>
+        </div>
+        <p id="file-status" class="muted" aria-live="polite">파일을 선택해 주세요. CSV 파일은 업로드되지 않으며 현재 브라우저에서만 읽습니다.</p>
+        <div id="mapping-panel" hidden>
+          <h3 style="margin:24px 0 12px;font-size:18px;">열 확인</h3>
+          <p class="muted">첫 행을 제목행으로 읽습니다. 자동 선택된 열을 확인하고 필요하면 바꿔 주세요.</p>
+          <div class="form-row">
+            <div class="field"><label for="map-date">이용일</label><select id="map-date"></select></div>
+            <div class="field"><label for="map-merchant">가맹점명 (필수)</label><select id="map-merchant"></select></div>
+            <div class="field"><label for="map-amount">이용금액 (필수)</label><select id="map-amount"></select></div>
+            <div class="field"><label for="map-extra">메모/유형 (선택)</label><select id="map-extra"></select></div>
+          </div>
+          <div style="margin-top:16px;"><button class="btn" id="analyze" type="button">거래 분석</button> <span id="row-count" class="muted"></span></div>
+        </div>
+        <div id="results" hidden>
+          <div class="tool-grid" style="margin-top:28px;">
+            <div class="summary-card"><div class="summary-label">확인된 인정 실적</div><div class="summary-value" id="sum-included">₩0</div></div>
+            <div class="summary-card"><div class="summary-label">제외 거래 합계</div><div class="summary-value" id="sum-excluded">₩0</div></div>
+            <div class="summary-card"><div class="summary-label">확인 필요 금액</div><div class="summary-value" id="sum-pending">₩0</div></div>
+            <div class="summary-card"><div class="summary-label">전체 거래</div><div class="summary-value" id="sum-count">0건</div></div>
+          </div>
+          <div class="form-row" style="margin-top:24px;align-items:center;">
+            <h3 style="margin:0;font-size:18px;flex:1;">거래별 판정 및 근거</h3>
+            <input class="search-box" id="filter-rows" type="search" placeholder="가맹점·근거 검색" aria-label="거래 검색">
+            <button class="btn secondary" id="clear-analysis" type="button">분석 초기화</button>
+          </div>
+          <p class="muted">판정을 바꾸면 합계가 즉시 재계산됩니다. ‘인정’ 금액은 사용자가 직접 확인해 선택한 거래의 합계이며, 공식 카드사 판정값이 아닙니다.</p>
+          <div class="table-wrap"><table><thead><tr><th>행</th><th>이용일</th><th>가맹점</th><th>금액</th><th>판정</th><th>근거 / 메모</th></tr></thead><tbody id="transaction-rows"></tbody></table></div>
+          <div class="pagination"><button class="btn secondary" id="previous-page" type="button">이전</button><span id="page-label" class="muted"></span><button class="btn secondary" id="next-page" type="button">다음</button></div>
+          <p class="muted">CSV를 닫거나 새로고침하면 분석 데이터가 사라집니다. 원본 CSV는 변경되지 않습니다.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -127,13 +188,13 @@ a:hover{color:#1B3BB0;}
         <div style="display:flex;flex-direction:column;gap:14px;">
           <div style="width:36px;height:36px;border-radius:50%;background:#2451E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;">2</div>
           <div style="font-size:16px;font-weight:700;">드래그 앤 드롭</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">CSV 읽기와 자동 분석은 베타 출시 전 파일 형식과 함께 검증할 예정입니다.</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">CSV 파일을 브라우저에서 읽고 가맹점명·금액 열을 직접 확인합니다.</div>
         </div>
 
         <div style="display:flex;flex-direction:column;gap:14px;">
           <div style="width:36px;height:36px;border-radius:50%;background:#2451E0;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;">3</div>
           <div style="font-size:16px;font-weight:700;">거래별 판정 및 근거 확인</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">포함·제외·조건부 판정과 공식 상품설명서 근거를 제공하는 것을 목표로 준비하고 있습니다.</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">거래별 판정을 수정하면 인정·제외·확인 필요 합계가 즉시 다시 계산됩니다.</div>
         </div>
 
       </div>
@@ -144,7 +205,7 @@ a:hover{color:#1B3BB0;}
     <div style="max-width:1120px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:48px;">
       <div style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;">
         <h2 class="section-title" style="margin:0;font-size:30px;font-weight:900;letter-spacing:-0.02em;">추측이 아니라, 근거로 판정합니다</h2>
-        <p style="margin:0;font-size:15px;color:#5B6472;max-width:640px;">베타에서는 공식 상품설명서 기반 버전형 룰 엔진으로 계산하도록 준비하고 있습니다</p>
+        <p style="margin:0;font-size:15px;color:#5B6472;max-width:640px;">현재는 사용자가 선택한 거래 판정과 CSV 원본 행 정보를 근거로 보여줍니다. 카드별 공식 규칙은 등록 전까지 자동 적용하지 않습니다.</p>
       </div>
 
       <div class="comparison-scroll" style="background:#FFFFFF;border:1px solid #E4E8EF;border-radius:16px;">
@@ -166,28 +227,28 @@ a:hover{color:#1B3BB0;}
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">판정 근거 표시</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (제외사유·규칙버전·근거)</div>
+          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (CSV 원본행·수동 메모)</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">여러 카드 통합 비교</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">X (자사 카드만)</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">소비 항목 기준으로만</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (목표)</div>
+          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">현재 미지원</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">수동 수정 / 재계산</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
           <div style="padding:18px 20px;font-size:13px;color:#B0B7C3;border-left:1px solid #E4E8EF;text-align:center;">X</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O</div>
+          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">O (사용자 판정 후)</div>
         </div>
 
         <div style="display:grid;grid-template-columns:200px repeat(3,1fr);border-top:1px solid #E4E8EF;">
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">카드사별 규칙 최신화</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">자사만</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">미반영</div>
-          <div style="padding:18px 20px;font-size:13px;font-weight:700;color:#059669;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">지속 관리 (경쟁력)</div>
+          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">현재 미지원</div>
         </div>
         </div>
       </div>
@@ -206,9 +267,9 @@ a:hover{color:#1B3BB0;}
 
   <section style="width:100%;background:#FFFFFF;">
     <div style="max-width:1120px;margin:0 auto;padding:80px 24px;display:flex;flex-direction:column;gap:48px;">
-      <div style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;">
-        <h2 class="section-title" style="margin:0;font-size:30px;font-weight:900;letter-spacing:-0.02em;">금융 데이터 보호 원칙도 함께 준비합니다</h2>
-        <p style="margin:0;font-size:15px;color:#5B6472;">아래 내용은 베타 출시 전 적용·검증할 예정인 운영 원칙입니다</p>
+        <div style="text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;">
+        <h2 class="section-title" style="margin:0;font-size:30px;font-weight:900;letter-spacing:-0.02em;">이용 데이터 처리 안내</h2>
+        <p style="margin:0;font-size:15px;color:#5B6472;">현재 제공되는 CSV 분석 방식에 대한 안내입니다.</p>
       </div>
       <div class="three-grid" style="gap:20px;">
 
@@ -216,24 +277,24 @@ a:hover{color:#1B3BB0;}
           <div style="width:44px;height:44px;border-radius:12px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke-linecap="round"/><circle cx="12" cy="15" r="1.4" fill="#059669" stroke="none"/></svg>
           </div>
-          <div style="font-size:16px;font-weight:700;">인증정보 미수집 원칙</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">카드 비밀번호, CVC 등 인증정보를 요청하거나 저장하지 않는 구조로 준비합니다.</div>
+          <div style="font-size:16px;font-weight:700;">카드 인증정보 입력 없음</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">카드 비밀번호나 CVC 입력란을 제공하지 않습니다. 분석에는 사용자가 선택한 CSV가 필요합니다.</div>
         </div>
 
         <div style="background:#F5F7FA;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;">
           <div style="width:44px;height:44px;border-radius:12px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z" stroke-linejoin="round"/></svg>
           </div>
-          <div style="font-size:16px;font-weight:700;">HTTPS 전송 적용 예정</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">베타에서는 업로드 데이터를 암호화된 HTTPS 구간으로만 전송하도록 적용·검증할 예정입니다.</div>
+          <div style="font-size:16px;font-weight:700;">CSV 서버 전송 없음</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">선택한 파일의 내용은 현재 분석을 위해 이 브라우저에서만 읽으며 서버로 전송하지 않습니다.</div>
         </div>
 
         <div style="background:#F5F7FA;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;">
           <div style="width:44px;height:44px;border-radius:12px;background:#ECFDF5;display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div style="font-size:16px;font-weight:700;">데이터 삭제 기능 제공 예정</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">업로드한 거래내역을 사용자가 직접 삭제할 수 있는 기능을 베타 범위에 포함할 예정입니다.</div>
+          <div style="font-size:16px;font-weight:700;">분석 초기화</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">분석 내용은 페이지 새로고침 시 사라집니다. 결과 화면의 초기화 버튼으로 바로 비울 수 있습니다.</div>
         </div>
 
       </div>
@@ -243,18 +304,18 @@ a:hover{color:#1B3BB0;}
   <section id="beta" style="width:100%;background:#12172B;">
     <div style="max-width:640px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;">
       <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(36,81,224,0.18);color:#8FA8F5;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">
-        베타 참여 사전 문의
+        서비스 문의
       </div>
-      <h2 style="margin:0;font-size:32px;font-weight:900;color:#fff;letter-spacing:-0.02em;">카드파일럿 베타 소식을<br>먼저 받아보세요</h2>
-      <p style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">현재 베타를 준비하고 있습니다. 하루한칸 문의폼에서 ‘카드파일럿 베타 참여’를 선택해 남겨주세요.</p>
+      <h2 style="margin:0;font-size:32px;font-weight:900;color:#fff;letter-spacing:-0.02em;">카드별 규칙 등록과<br>개선 의견을 보내주세요</h2>
+      <p style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">카드별 공식 규칙은 현재 미등록 상태입니다. 지원을 원하는 카드와 오류·개선 의견을 하루한칸 문의폼으로 알려주세요.</p>
 
-      <a href="https://haru-hankan.onrender.com/#contact" style="margin-top:12px;width:100%;max-width:420px;padding:15px 22px;border-radius:8px;background:#2451E0;color:#fff;font-size:15px;font-weight:700;">하루한칸 문의폼에서 베타 참여 신청</a>
+      <a href="https://haru-hankan.onrender.com/#contact" style="margin-top:12px;width:100%;max-width:420px;padding:15px 22px;border-radius:8px;background:#2451E0;color:#fff;font-size:15px;font-weight:700;">하루한칸 문의폼 열기</a>
       <nav aria-label="관련 링크" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:20px;font-size:13px;">
         <a href="https://haru-hankan.onrender.com/" style="color:#AAB2C5;text-decoration:underline;">하루한칸</a>
         <a href="https://haru-hankan.onrender.com/privacy.html" style="color:#AAB2C5;text-decoration:underline;">개인정보처리방침</a>
         <a href="https://haru-hankan.onrender.com/terms.html" style="color:#AAB2C5;text-decoration:underline;">서비스 이용 안내</a>
       </nav>
-      <p style="margin:0;font-size:12px;color:#6B7385;">카드파일럿은 베타 준비 단계이며 기능과 운영 정책은 출시 전 변경될 수 있습니다.</p>
+      <p style="margin:0;font-size:12px;color:#6B7385;">현재 카드별 공식 실적 판정은 지원하지 않으며, 거래별 수동 검토 및 합산 기능을 제공합니다.</p>
     </div>
   </section>
 
@@ -266,6 +327,8 @@ a:hover{color:#1B3BB0;}
   </footer>
 
 </div>
+
+<script src="cardpilot.js" defer></script>
 
 </body>
 </html>
