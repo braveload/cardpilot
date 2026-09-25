@@ -193,7 +193,7 @@
     }
     fillProductSelect(issuers[0]);
     const summary = window.CARDPILOT_RULES.summary;
-    $('#product-rule-summary').textContent = `상품 목록 ${summary.catalogCardCount}종 등록 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 기준 확인 중 ${summary.pendingRuleCount}종 (은행 BC ${summary.bankBcCardCount} · 삼성 ${summary.samsungCardCount} · 우리 ${summary.wooriCardCount} · 롯데 ${summary.lotteCardCount}). 확인 중 상품은 인정 실적에 합산하지 않습니다.`;
+    $('#product-rule-summary').textContent = `상품 목록 ${summary.catalogCardCount}종 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 규칙 확인 중 ${summary.pendingRuleCount}종. BC 회원사 ${summary.bankBcIssuerCount}곳의 현재 목록은 ${summary.bankBcCardCount}종(회원사별 등록 가능 상품 수에 따라 다름)이며, 하나·신한·NH농협 일반 카드도 각 ${summary.hanaCardCount}종씩 별도 목록으로 추가했습니다. 확인 중 상품은 인정 실적에 합산하지 않습니다.`;
     function selectedProductChanged() {
       state.transactions.forEach((item) => classify(item)); updateSummary(); renderRows(); markComparisonStale();
       renderCatalogDetail(currentProduct());

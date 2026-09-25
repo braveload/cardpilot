@@ -24,6 +24,11 @@
     { label: '무이자 할부 이용금액', keywords: ['무이자할부', '무이자 할부'] }
   ];
   const hyundaiDiscountedTransaction = { label: '해당 카드의 할인 혜택 적용 결제 전체', keywords: ['할인적용', '할인받음', '청구할인', '할인금액'], discountOnly: true };
+  const bcMemberProducts = (issuer, key, memberNo, entries) => entries.map(([code, name]) => ({
+    id: `bc-member-${key}-${code}`, name, issuer: `${issuer} (BC 회원사)`,
+    source: `https://www.bccard.com/app/card/CreditCardMain.do?gdsno=${code}&mbkNo=${memberNo}`,
+    sourceTitle: `BC카드 공식 ${issuer} 회원사 신용카드 목록`
+  }));
   const pendingProducts = [
     ...[
       ['bc-ibk-bliss-mileage', '[IBK기업은행] BLISS Mileage', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104506&mbkNo=003'],
@@ -36,7 +41,7 @@
       ['bc-ibk-mileage', '[IBK기업은행] I-Mileage(대한항공마일리지)', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103401&mbkNo=003'],
       ['bc-ibk-green', '[IBK기업은행] I-어디로든그린카드', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103214&mbkNo=003'],
       ['bc-ibk-kpass', '[IBK기업은행] K-패스(신용)', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103105&mbkNo=003']
-    ].map(([id, name, source]) => ({ id, name, issuer: 'IBK기업은행 (BC)', source, sourceTitle: 'BC카드 공식 IBK기업은행 신용카드 목록' })),
+    ].map(([id, name, source]) => ({ id, name, issuer: 'IBK기업은행 (BC 회원사)', source, sourceTitle: 'BC카드 공식 IBK기업은행 회원사 신용카드 목록' })),
     ...[
       ['samsung-monimo-pay', '모니모페이카드'],
       ['samsung-id-select-all', '삼성 iD SELECT ALL 카드'],
@@ -73,6 +78,28 @@
       ['lotte-members', '롯데멤버스 카드'],
       ['lotte-loca-likit', 'LOCA LIKIT']
     ].map(([id, name]) => ({ id, name, issuer: '롯데카드', source: 'https://www.lottecard.co.kr/app/LPCDARA_V100.lc', sourceTitle: '롯데카드 공식 카드 한눈에 보기' }))
+    ,...[
+      ...bcMemberProducts('우리카드', 'woori', '020', [['227702','[우리] 국민행복카드(신용)'],['242266','[BC공통] 비씨 다이아몬드 골프야드 카드'],['242241','[BC공통] 비씨 다이아몬드 스카이패스 카드'],['000000','[BC공통] 비씨TOP포인트카드'],['225005','[BC공통] 인피니트 TOP 카드'],['225021','[BC공통] 인피니트 아시아나클럽 카드'],['225018','[BC공통] 인피니트 스카이패스 카드'],['220013','[BC공통] TnT카드'],['212526','[BC공통] 레포츠카드'],['222711','[BC공통] 쉬즈 카드']]),
+      ...bcMemberProducts('SC제일은행', 'sc', '023', [['100103','[SC제일] 리워드W 신용카드'],['232739','[SC제일] 뉴 타임 카드'],['232124','[SC제일] 국민행복카드(신용)'],['230029','[SC제일] 시그마 카드'],['230977','[SC제일] 리워드 플러스 신용카드(VISA)'],['231002','[SC제일] TIME카드'],['231028','[SC제일] 딜라이트 카드']]),
+      ...bcMemberProducts('하나카드', 'hana', '025', [['251066','[하나] 토스신용카드'],['251008','[하나] 카카오T 하나카드'],['250818','[하나] 부자되세요 The Oil카드'],['366663','[하나] kt super DC카드'],['366651','[하나] kt super 할부카드'],['250711','[하나] 하나멤버스 1Q카드 Daily BC'],['373986','[하나] 그린카드'],['000000','[BC공통] 비씨TOP포인트카드'],['112244','[BC공통] 아시아나클럽카드'],['220013','[BC공통] TnT카드']]),
+      ...bcMemberProducts('NH농협카드', 'nh', '011', [['103213','[NH농협] 어디로든 그린카드'],['100122','[NH농협] Air Money 카드'],['176565','[NH농협] LCC UniMile 카드'],['176468','[NH농협] 적립조아카드'],['176484','[NH농협] 쇼핑조아카드'],['176471','[NH농협] 할인조아카드'],['176442','[NH농협] NEW 경기 아이플러스카드'],['112422','[NH농협] NH농협 엘포인트 카드(신용)'],['111151','[NH농협] 부자되세요 홈쇼핑카드'],['176222','[NH농협] 국민행복카드(신용)']]),
+      ...bcMemberProducts('KB국민카드', 'kb', '006', [['000000','[BC공통] 비씨TOP포인트카드']]),
+      ...bcMemberProducts('iM뱅크', 'im', '031', [['103995','[iM뱅크] iM 트래블 카드'],['102328','[iM뱅크] iM i 카드'],['101070','[iM뱅크] iM UntacT 카드'],['311948','[iM뱅크] 세븐캐쉬백카드'],['311744','[iM뱅크] 부자되세요 아파트카드'],['311692','[iM뱅크] 그린카드 v2'],['311689','[iM뱅크] GREIT카드'],['311472','[iM뱅크] olleh Super DC카드'],['311773','[iM뱅크] 국민행복카드(신용)'],['311621','[iM뱅크] 부자되세요 홈쇼핑카드(신용)']]),
+      ...bcMemberProducts('BNK부산은행', 'busan', '032', [['103961','[BNK부산] REXⅡ 카드'],['103378','[BNK부산] ZipL 신용카드'],['103192','[BNK부산] 부산체육사랑카드'],['103022','[BNK부산] 팟(pod) 카드'],['102332','[BNK부산] SK OIL＆LPG카드_부산'],['771291','[BNK부산] 오늘은e 신용카드'],['771012','[BNK부산] BNK프렌즈카드(신용)'],['770534','[BNK부산] 국민행복카드(신용)'],['770518','[BNK부산] 부자되세요 홈쇼핑카드'],['323761','[BNK부산] 딩딩 신용카드']]),
+      ...bcMemberProducts('BNK경남은행', 'gyeongnam', '039', [['104511','[BNK경남] 경남은행 K-패스 카드'],['104239','[BNK경남] REXⅡ 카드'],['103676','[BNK경남] 키스해링 신용카드'],['103211','[BNK경남] 어디로든 그린카드'],['103035','[BNK경남] AIR Mile(대한항공) 카드'],['102331','[BNK경남] SK OIL＆LPG카드'],['102355','[BNK경남] The Art Card(할인형)'],['102465','[BNK경남] The Art Card(캐시백형)'],['102356','[BNK경남] The Gallery Card'],['397344','[BNK경남] ANY카드']]),
+      ...bcMemberProducts('신한카드', 'shinhan', '021', [['211378','[신한] 부자되세요 홈쇼핑카드'],['000000','[BC공통] 비씨TOP포인트카드']]),
+      ...bcMemberProducts('Sh수협은행', 'suhyup', '007', [['104474','[Sh수협] 더 아우름 카드'],['104068','[Sh수협] All드림카드'],['103581','[Sh수협] 樂SEA카드'],['103185','[Sh수협] Real Real 1.0'],['100644','[Sh수협] Real?Real! 2 카드']]),
+      ...bcMemberProducts('광주은행', 'gwangju', '034', [['104281','[광주] 대한항공 SKYPASS 카드(일반형)'],['104282','[광주] 대한항공 SKYPASS 카드(플래티늄형)'],['104081','[광주] 기아챔피언스카드'],['103880','[광주] 오일모아카드'],['103881','[광주] 에듀플러스카드'],['103367','[광주] 다자녀행복카드'],['103119','[광주] K-패스 그린카드V2'],['101497','[광주] 광주전남愛사랑 HONORS V2 CARD'],['340294','[광주] 1st카드']]),
+      ...[
+        ['hana-jade-classic','JADE Classic'],['hana-wonder-t','원더카드 T'],['hana-wonder-free-plus','원더카드 FREE+'],['hana-wonder-happy-plus','원더카드 HAPPY+'],['hana-wonder-daily','원더카드 DAILY'],['hana-wonder-living','원더카드 LIVING'],['hana-wonder-free','원더카드 FREE'],['hana-wonder-happy','원더카드 HAPPY'],['hana-multi-living','MULTI Living 모바일카드'],['hana-multi-oil','MULTI Oil 모바일카드']
+      ].map(([id,name])=>({id,name,issuer:'하나카드',source:'https://m.hanacard.co.kr/MKCA2P1000M.web?BRANCH_CD=8',sourceTitle:'하나카드 공식 카드 상품 목록'})),
+      ...[
+        ['shinhan-mrlife','신한카드 Mr.Life'],['shinhan-deep-oil','신한카드 Deep Oil'],['shinhan-coway','코웨이 신한카드'],['shinhan-discount-plan','신한카드 Discount Plan'],['shinhan-first-anniverse','신한카드 처음 ANNIVERSE'],['shinhan-simple-plan','신한카드 Simple Plan'],['shinhan-kpass','신한카드 K-패스 신용'],['shinhan-mycar','신한카드 MY CAR'],['shinhan-everywhere','신한카드 EVerywhere'],['shinhan-edu-plan','신한카드 Edu Plan+']
+      ].map(([id,name])=>({id,name,issuer:'신한카드',source:'https://www.shinhancard.com/pconts/html/landing/2013506_2424.html',sourceTitle:'신한카드 공식 인기카드 TOP 10'})),
+      ...[
+        ['nh-zgm-shopping','zgm shopping카드','90010505'],['nh-zgm-play','zgm.play++카드','90010468'],['nh-zgm-thepay','zgm.the pay카드','90010178'],['nh-zgm-discount','zgm 할인카드','90010515'],['nh-zgm-vacation','zgm.휴가중카드','90010184'],['nh-zgm-rounding','zgm.rounding카드','90010213'],['nh-zgm-home','zgm.고향으로카드','90010216'],['nh-kpass','K-패스카드(신용)','90010471'],['nh-self','zgm 스스로카드','90010575'],['nh-goodnew','올바른NEW HAVE+카드','90010034']
+      ].map(([id,name,code])=>({id,name,issuer:'NH농협카드',source:`https://card.nonghyup.com/servlet/IpCc2021R.act?CD_WRS_SQNO=${code}`,sourceTitle:'NH농협카드 공식 카드 상세 목록'}))
+    ]
   ].map((product) => ({
     ...product,
     threshold: 0,
@@ -320,6 +347,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 7, supportedCardCount: 26, catalogCardCount: 66, pendingRuleCount: 40, kbCardCount: 10, hyundaiCardCount: 10, bankBcCardCount: 10, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10 }
+    summary: { supportedIssuerCount: 21, supportedCardCount: 26, catalogCardCount: 180, pendingRuleCount: 154, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
