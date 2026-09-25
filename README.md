@@ -2,7 +2,7 @@
 
 하루한칸과 연결되는 카드파일럿 웹 서비스입니다. 브라우저 안에서 CSV 거래내역을 읽고 열을 매핑해 거래별 검토, 사용자 판정, 인정 실적 합산을 제공합니다.
 
-- 운영 주소: https://braveload.github.io/cardpilot/
+- 운영 주소: https://cardpilot-k5y7.onrender.com/ (GitHub Pages 미러: https://braveload.github.io/cardpilot/)
 - 게시 파일: `index.html`, `cardpilot.js`
 - 데이터 처리: 브라우저 로컬 처리 (CSV 내용을 서버로 전송하거나 저장하지 않음)
 - 지원 파일: CSV, UTF-8 및 브라우저가 지원하는 EUC-KR, 최대 20MB
