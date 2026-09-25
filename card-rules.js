@@ -85,6 +85,17 @@
   const hanaMultiLivingDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '쿠페이', '11pay', 'l.pay', '카카오페이', 'ssg페이', '페이코', 'skt통신요금', 'kt통신요금', 'lgu통신요금', '전기요금자동이체', '도시가스자동이체'];
   const hanaMultiOilDiscountExemptionKeywords = ['하나페이', '삼성페이', '네이버페이', '페이코', '11pay', '카카오페이', 'ssg페이'];
   const officialSpendRules = {
+    'bc-member-shinhan-211378': {
+      threshold: 200000, thresholdLabel: '20만원 (6대 홈쇼핑·생활 할인 서비스 기준)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '6대 홈쇼핑 이용금액', keywords: ['cj오쇼핑', 'gs홈쇼핑', '현대홈쇼핑', '롯데홈쇼핑', '홈앤쇼핑', 'ns홈쇼핑', '홈쇼핑'] },
+        { label: '카드대출·수수료·이자·연회비', keywords: ['단기카드대출', '현금서비스', '장기카드대출', '카드론', '수수료', '이자', '연회비'] },
+        { label: '기프트카드·선불카드 구매 및 충전', keywords: ['기프트카드', '선불카드', '선불충전'] },
+        { label: '거래 취소금액', keywords: ['거래취소', '취소금액', '매출취소'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=211378&mbkNo=021',
+      sourceTitle: 'BC카드·신한 부자되세요 홈쇼핑카드 공식 상세·전월 실적 기준 및 제외 항목', checkedAt: '2026-09-25'
+    },
     'bc-member-hana-251066': {
       threshold: 0, thresholdLabel: '전월 실적 기준 명시 없음 (해외 2% 적립; ATM 수수료 우대는 전월 사용액·횟수 무관)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [], conditional: [],
@@ -904,6 +915,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 165, catalogCardCount: 180, pendingRuleCount: 15, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 166, catalogCardCount: 180, pendingRuleCount: 14, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
