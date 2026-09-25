@@ -62,6 +62,9 @@
     if (!Number.isFinite(transaction.amount) || !transaction.merchant || transaction.amount <= 0) {
       transaction.status = 'pending'; transaction.evidence = '금액/가맹점 확인 필요: 결제취소·환불 또는 빈 항목일 수 있어 합산하지 않았습니다.'; return;
     }
+    if (product.verificationStatus === 'pending') {
+      transaction.status = 'conditional'; transaction.evidence = `확인 필요: ${product.name} 상품별 공식 전월 실적 기준·제외 항목을 검증 중입니다. 인정/제외 판정과 실적 합산을 보류합니다 · ${product.sourceTitle} (${product.checkedAt})`; return;
+    }
     const discountExempt = (product.discountExemptionKeywords || []).some((word) => text.includes(normalize(word)));
     const productRules = product.extraExclusions.filter((rule) => !(discountExempt && rule.discountOnly));
     const rules = [...(product.useCommonExclusions === false ? [] : window.CARDPILOT_RULES.commonExclusions), ...productRules];
@@ -82,9 +85,14 @@
     state.transactions.forEach((item) => { sums[item.status] = (sums[item.status] || 0) + Math.max(0, item.amount); });
     $('#sum-included').textContent = money(sums.included); $('#sum-excluded').textContent = money(sums.excluded);
     $('#sum-pending').textContent = money(sums.pending + sums.conditional); $('#sum-count').textContent = `${state.transactions.length.toLocaleString('ko-KR')}건`;
-    const threshold = currentProduct().threshold;
+    const product = currentProduct();
+    if (product.verificationStatus === 'pending') {
+      $('#product-rule-summary').textContent = `${product.name}: 상품 목록 등록 완료 · 공식 실적 기준 확인 중. 거래별 판정과 인정 실적 합산은 보류하며, 확인된 기존 규칙 ${window.CARDPILOT_RULES.summary.supportedCardCount}종은 계속 사용할 수 있습니다.`;
+      return;
+    }
+    const threshold = product.threshold;
     const supported = window.CARDPILOT_RULES.summary.supportedCardCount;
-    const thresholdLabel = currentProduct().thresholdLabel || money(threshold);
+    const thresholdLabel = product.thresholdLabel || money(threshold);
     $('#product-rule-summary').textContent = threshold ? `공식 안내로 확인한 ${supported}종 규칙 등록 · 현재 인정 예상 ${money(sums.included)} / 기준 ${thresholdLabel} · 남은 예상액 ${money(Math.max(0, threshold - sums.included))}. 상품에 따라 추가 혜택 기준은 다를 수 있습니다.` : `공식 안내로 확인한 ${supported}종 규칙 등록 · ${thresholdLabel}. 카드별 거래 제외 기준은 등록된 공식 안내를 확인하세요.`;
   }
   function visibleTransactions() {
@@ -177,7 +185,8 @@
       });
       group.append(grid); container.append(group);
     });
-    $('#product-rule-summary').textContent = `현재 ${window.CARDPILOT_RULES.summary.supportedIssuerCount}개 카드사 ${window.CARDPILOT_RULES.summary.supportedCardCount}종 지원: BC 바로카드 6종 · KB국민카드 ${window.CARDPILOT_RULES.summary.kbCardCount}종 · 현대카드 ${window.CARDPILOT_RULES.summary.hyundaiCardCount}종. 나머지 상품도 공식 자료 대조 후 추가합니다.`;
+    const summary = window.CARDPILOT_RULES.summary;
+    $('#product-rule-summary').textContent = `상품 목록 ${summary.catalogCardCount}종 등록 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 기준 확인 중 ${summary.pendingRuleCount}종 (은행 BC ${summary.bankBcCardCount} · 삼성 ${summary.samsungCardCount} · 우리 ${summary.wooriCardCount} · 롯데 ${summary.lotteCardCount}). 확인 중 상품은 인정 실적에 합산하지 않습니다.`;
     select.addEventListener('change', () => {
       state.transactions.forEach((item) => classify(item)); updateSummary(); renderRows(); markComparisonStale();
     });

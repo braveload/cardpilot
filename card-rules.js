@@ -24,6 +24,65 @@
     { label: '무이자 할부 이용금액', keywords: ['무이자할부', '무이자 할부'] }
   ];
   const hyundaiDiscountedTransaction = { label: '해당 카드의 할인 혜택 적용 결제 전체', keywords: ['할인적용', '할인받음', '청구할인', '할인금액'], discountOnly: true };
+  const pendingProducts = [
+    ...[
+      ['bc-ibk-bliss-mileage', '[IBK기업은행] BLISS Mileage', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104506&mbkNo=003'],
+      ['bc-ibk-bliss-point', '[IBK기업은행] BLISS Point', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104561&mbkNo=003'],
+      ['bc-ibk-boc', '[IBK기업은행] BOC(福)', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104417&mbkNo=003'],
+      ['bc-ibk-happymate', '[IBK기업은행] 해피메이트', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104376&mbkNo=003'],
+      ['bc-ibk-climate', '[IBK기업은행] I-기후동행카드', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=104073&mbkNo=003'],
+      ['bc-ibk-point38', '[IBK기업은행] IBK포인트3.8', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103991&mbkNo=003'],
+      ['bc-ibk-point', '[IBK기업은행] IBK포인트', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103937&mbkNo=003'],
+      ['bc-ibk-mileage', '[IBK기업은행] I-Mileage(대한항공마일리지)', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103401&mbkNo=003'],
+      ['bc-ibk-green', '[IBK기업은행] I-어디로든그린카드', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103214&mbkNo=003'],
+      ['bc-ibk-kpass', '[IBK기업은행] K-패스(신용)', 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103105&mbkNo=003']
+    ].map(([id, name, source]) => ({ id, name, issuer: 'IBK기업은행 (BC)', source, sourceTitle: 'BC카드 공식 IBK기업은행 신용카드 목록' })),
+    ...[
+      ['samsung-monimo-pay', '모니모페이카드'],
+      ['samsung-id-select-all', '삼성 iD SELECT ALL 카드'],
+      ['samsung-id-overseas35', '삼성 iD 해외 3.5 카드'],
+      ['samsung-mileage-platinum', '삼성카드 & MILEAGE PLATINUM (스카이패스)'],
+      ['samsung-id-select-up', '삼성 iD SELECT UP 카드'],
+      ['samsung-taptap-o', '삼성카드 taptap O'],
+      ['samsung-id-global', '삼성 iD GLOBAL 카드'],
+      ['samsung-id-simple', '삼성 iD SIMPLE 카드'],
+      ['samsung-id-select-on', '삼성 iD SELECT ON 카드'],
+      ['samsung-id-one', '삼성 iD ONE 카드']
+    ].map(([id, name]) => ({ id, name, issuer: '삼성카드', source: 'https://www.samsungcard.com/home/card/cardinfo/pghppdccardcardinforecommendpc001', sourceTitle: '삼성카드 공식 추천 카드 목록' })),
+    ...[
+      ['woori-standard2', '카드의정석2', '102997'],
+      ['woori-daily', '카드의정석2 DAILY', '500058'],
+      ['woori-shopper', '카드의정석2 SHOPPER', '104151'],
+      ['woori-opus-silver', 'the OPUS silver', '103500'],
+      ['woori-7core', '우리카드 7CORE', '103755'],
+      ['woori-start-travel', '스타트래블 우리카드', '104171'],
+      ['woori-super-20', '카드의정석2 SUPER 2.0%', '500044'],
+      ['woori-routine', '카드의정석2 ROUTINE', '500045'],
+      ['woori-unimile', '우리카드 UniMile', '104153'],
+      ['woori-opus-blue', 'the OPUS blue', '500049']
+    ].map(([id, name, code]) => ({ id, name, issuer: '우리카드', source: `https://pc.wooricard.com/dcpc/yh1/crd/crd01/H1CRD101S02.do?cdPrdCd=${code}`, sourceTitle: '우리카드 공식 카드 메인 상품 목록' })),
+    ...[
+      ['lotte-loca-likit12', 'LOCA LIKIT 1.2'],
+      ['lotte-digiloca-london', '디지로카 London'],
+      ['lotte-digiloca-lasvegas', '디지로카 Las Vegas'],
+      ['lotte-digiloca-paris', '디지로카 Paris'],
+      ['lotte-department-store', '롯데백화점 롯데카드'],
+      ['lotte-loca-likit-shop', 'LOCA LIKIT Shop'],
+      ['lotte-point-plus', '롯데포인트 플러스 카드'],
+      ['lotte-lola', '롤라카드'],
+      ['lotte-members', '롯데멤버스 카드'],
+      ['lotte-loca-likit', 'LOCA LIKIT']
+    ].map(([id, name]) => ({ id, name, issuer: '롯데카드', source: 'https://www.lottecard.co.kr/app/LPCDARA_V100.lc', sourceTitle: '롯데카드 공식 카드 한눈에 보기' }))
+  ].map((product) => ({
+    ...product,
+    threshold: 0,
+    thresholdLabel: '상품별 실적 규칙 확인 중 · 합산 보류',
+    verificationStatus: 'pending',
+    useCommonExclusions: false,
+    extraExclusions: [],
+    conditional: [],
+    checkedAt: '2026-09-25'
+  }));
 
   window.CARDPILOT_RULES = {
     checkedAt: '2026-09-25',
@@ -257,9 +316,10 @@
         extraExclusions: [], conditional: [],
         source: 'https://www.hyundaicard.com/cpc/cr/CPCCR0201_01.hc?cardWcd=MZRUP',
         sourceTitle: '현대카드 ZERO Up(포인트형) 공식 상품 안내·혜택 제공 기준', checkedAt: '2026-09-25'
-      }
+      },
+      ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 3, supportedCardCount: 26, kbCardCount: 10, hyundaiCardCount: 10 }
+    summary: { supportedIssuerCount: 7, supportedCardCount: 26, catalogCardCount: 66, pendingRuleCount: 40, kbCardCount: 10, hyundaiCardCount: 10, bankBcCardCount: 10, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10 }
   };
 })();
