@@ -150,6 +150,17 @@
       source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=220013&mbkNo=020',
       sourceTitle: 'BC카드 공식 TnT카드 상세 (하나은행 발급 시 30만원 기준·국내 실적 및 취소 처리)', checkedAt: '2026-09-25'
     },
+    'bc-member-hana-112244': {
+      threshold: 0, thresholdLabel: '전월 실적 조건 없음 (개인회원 국내외 일시불·할부 1,000원당 1마일)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '무이자할부 이용액', keywords: ['무이자할부', '무이자 할부'] },
+        { label: '취소 매출', keywords: ['매출취소', '취소매출', '취소금액', '거래취소'] },
+        { label: '대학 등록금', keywords: ['대학등록금', '대학교등록금', '대학원등록금'] },
+        { label: '국세·지방세', keywords: ['국세', '지방세', '세금납부'] }
+      ], conditional: [],
+      source: 'https://www.bccard.com/down/individual/customer/25_asianaclub_220208.pdf',
+      sourceTitle: 'BC카드 아시아나클럽카드 공식 상품안내장 (마일리지 적립 및 제외 항목)', checkedAt: '2026-09-25'
+    },
     'bc-member-shinhan-000000': {
       threshold: 0, thresholdLabel: '전월 최소실적 기준 없음 (TOP포인트 적립률은 월 결제액 구간별 0.1~0.3%)', verificationStatus: 'verified', useCommonExclusions: false,
       extraExclusions: [
@@ -1001,6 +1012,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 175, catalogCardCount: 180, pendingRuleCount: 5, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 176, catalogCardCount: 180, pendingRuleCount: 4, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
