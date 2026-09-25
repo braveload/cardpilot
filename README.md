@@ -2,10 +2,11 @@
 
 하루한칸과 연결되는 카드파일럿 전용 안내 사이트입니다. 첫 공개 버전은 베타 준비와 참여 신청을 안내하며, 실제 CSV 분석 기능이 제공되는 것으로 안내하지 않습니다.
 
+- 운영 주소: https://braveload.github.io/cardpilot/
 - 게시 파일: `index.html`
 - 문의 접수: 하루한칸 홈페이지의 카드파일럿 문의 분야
 - 개인정보처리방침 및 서비스 이용 안내: 하루한칸 홈페이지 문서
 
-## Render
+## GitHub Pages
 
-Render Static Site의 Publish Directory를 저장소 루트(`.`)로 설정합니다. `main` 브랜치 반영 시 자동 배포합니다.
+`main` 브랜치 루트에서 GitHub Pages를 게시합니다. `main` 브랜치에 반영하면 자동으로 갱신됩니다.
