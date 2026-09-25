@@ -307,6 +307,18 @@
       source: 'https://www.shinhancard.com/pconts/html/card/apply/credit/1187937_2207.html?btnApp=dp01&empSeq=87',
       sourceTitle: '신한카드 Mr.Life 공식 상품 안내 (전월 이용금액 및 제외 기준)', checkedAt: '2026-09-25'
     },
+    'shinhan-first-anniverse': {
+      threshold: 300000, thresholdLabel: '30만원 (포인트 적립 및 소비관리 보너스 최소 구간)', verificationStatus: 'verified', useCommonExclusions: false,
+      extraExclusions: [
+        { label: '카드대출·연회비·수수료·이자', keywords: ['단기카드대출', '현금서비스', '장기카드대출', '카드론', '연회비', '수수료', '이자'] },
+        { label: '기프트·선불·상품권 구매/충전', keywords: ['기프트카드', '선불카드', '선불전자지급수단', '상품권', '선불충전'] },
+        { label: '세금·공공요금·사회보험', keywords: ['국세', '지방세', '수도요금', '지방세외수입', '환경개선부담금', '도시가스', '전기요금', '아파트관리비', 'tv수신료', '국민연금', '고용보험', '건강보험', '산재보험'] },
+        { label: '유치원·초중고 납입금 및 대학(원) 등록금', keywords: ['유치원', '초중고납입금', '초중고학교납입금', '학교납입금', '스쿨뱅킹', '대학등록금', '대학교등록금', '대학원등록금'] },
+        { label: '거래 취소금액', keywords: ['거래취소', '취소금액'] }
+      ],
+      source: 'https://www.shinhancard.com/pconts/html/card/apply/credit/1229296_2207.html',
+      sourceTitle: '신한카드 처음 공식 상세·전월 이용금액 산정 및 포인트 적립 제외 기준', checkedAt: '2026-09-25'
+    },
     'nh-zgm-shopping': { threshold: 500000, thresholdLabel: '50만원 (쇼핑 적립 최소 구간)', verificationStatus: 'verified', extraExclusions: [nhPointUseExclusion, nhCryptoExclusion, nhTransitTaxiExclusion], sourceTitle: 'NH농협카드 zgm shopping 공식 카드 상세·서비스 이용조건', checkedAt: '2026-09-25' },
     'nh-zgm-play': {
       threshold: 300000, thresholdLabel: '30만원 (할인 서비스 최소 구간; 70만원 구간은 한도 상향)', verificationStatus: 'verified',
@@ -764,6 +776,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 151, catalogCardCount: 180, pendingRuleCount: 29, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 152, catalogCardCount: 180, pendingRuleCount: 28, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
