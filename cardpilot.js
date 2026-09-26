@@ -54,6 +54,33 @@
   }
   function money(value) { return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW', maximumFractionDigits: 0 }).format(value); }
   function escapeHtml(value) { return String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]); }
+  function duplicateKey(row) {
+    const amount = parseAmount(row.amount);
+    if (!row.date || !row.merchant || !Number.isFinite(amount)) return '';
+    return `${normalize(row.date)}|${normalize(row.merchant)}|${amount}`;
+  }
+  function csvCell(value, protectFormula = false) {
+    let text = String(value ?? '');
+    if (protectFormula && /^[\s\u0000-\u001f]*[=+@-]/.test(text)) text = `'${text}`;
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+  function exportTransactions() {
+    if (!state.transactions.length) { $('#file-status').textContent = '먼저 거래를 분석해 주세요.'; return; }
+    const statusLabels = { included: '인정 예상', excluded: '제외 예상', pending: '확인 필요', conditional: '조건 확인' };
+    const rows = [['출처', '이용일', '가맹점', '이용금액(원)', '선택 카드사', '선택 상품', '판정', '판정 근거', '메모']];
+    state.transactions.forEach((item) => {
+      const product = products.find((entry) => entry.id === item.productId) || currentProduct();
+      rows.push([
+        item.sourceLabel || `CSV ${item.sourceIndex + 2}행`, item.date, item.merchant, item.amount,
+        product.issuer, product.name, statusLabels[item.status] || '확인 필요', item.evidence, item.note
+      ].map((value, index) => csvCell(value, index !== 3)));
+    });
+    const blob = new Blob([`\uFEFF${rows.map((row) => row.join(',')).join('\r\n')}`], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = `cardpilot-details-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    $('#file-status').textContent = `${state.transactions.length.toLocaleString('ko-KR')}건의 상세 판정 내역을 이 기기에 CSV로 다운로드했습니다. 서버에는 전송하지 않았습니다.`;
+  }
   function currentProduct() { return products.find((product) => product.id === $('#product-select').value) || products[0]; }
   function renderCatalogDetail(product) {
     const detail = $('#catalog-detail');
@@ -169,12 +196,29 @@
     throw new Error('한국어 OCR 엔진을 불러오지 못했습니다. 네트워크 연결을 확인하거나 CSV를 이용해 주세요.');
   }
   function ingestRows(rows, source) {
-    const accepted = rows.map((row, index) => {
-      const amount = parseAmount(row.amount); const item = { id: state.transactions.length + index, sourceIndex: index, sourceLabel: source ? `${source} ${index + 1}` : '', date: String(row.date || '').trim(), merchant: String(row.merchant || '').trim(), extra: String(row.extra || '').trim(), amount: Number.isFinite(amount) ? amount : 0, status: 'pending', evidence: '', note: '', discount: row.discount || '' };
+    const prepared = rows.map((row, index) => ({ row: { ...row, date: String(row.date || '').trim(), merchant: String(row.merchant || '').trim() }, index }));
+    const seen = new Set(state.transactions.map(duplicateKey).filter(Boolean));
+    let duplicateCount = 0;
+    prepared.forEach(({ row }) => {
+      const key = duplicateKey(row);
+      if (key && seen.has(key)) duplicateCount += 1;
+      if (key) seen.add(key);
+    });
+    const excludeDuplicates = duplicateCount > 0 && window.confirm(`기존 내역 또는 이번 파일 안에서 날짜·가맹점·금액이 같은 거래 ${duplicateCount}건을 찾았습니다.\n\n[확인] 중복으로 보이는 거래 제외\n[취소] 중복 거래도 모두 추가`);
+    const uniqueKeys = new Set(state.transactions.map(duplicateKey).filter(Boolean));
+    const accepted = prepared.filter(({ row }) => {
+      if (!excludeDuplicates) return true;
+      const key = duplicateKey(row);
+      if (!key) return true;
+      if (uniqueKeys.has(key)) return false;
+      uniqueKeys.add(key); return true;
+    }).map(({ row, index }, acceptedIndex) => {
+      const amount = parseAmount(row.amount); const item = { id: state.transactions.length + acceptedIndex, sourceIndex: index, sourceLabel: source ? `${source} ${index + 1}` : '', date: row.date, merchant: row.merchant, extra: String(row.extra || '').trim(), amount: Number.isFinite(amount) ? amount : 0, status: 'pending', evidence: '', note: '', discount: row.discount || '' };
       classify(item); return item;
     });
     state.transactions.push(...accepted); state.page = Math.max(0, Math.ceil(state.transactions.length / PAGE_SIZE) - 1);
-    showResults(`${accepted.length}건 거래 후보를 추가했습니다. 인식 결과와 예상 판정을 원본 내역과 대조해 주세요.`);
+    const skipped = excludeDuplicates ? ` · 중복 의심 ${duplicateCount}건 제외` : duplicateCount ? ` · 중복 의심 ${duplicateCount}건 포함` : '';
+    showResults(`${accepted.length}건 거래 후보를 추가했습니다${skipped}. 인식 결과와 예상 판정을 원본 내역과 대조해 주세요.`);
   }
   function setupProducts() {
     const issuerSelect = $('#issuer-select');
@@ -194,6 +238,16 @@
     fillProductSelect(issuers[0]);
     const summary = window.CARDPILOT_RULES.summary;
     $('#product-rule-summary').textContent = `상품 목록 ${summary.catalogCardCount}종 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 규칙 확인 중 ${summary.pendingRuleCount}종. BC 회원사 ${summary.bankBcIssuerCount}곳의 현재 목록은 ${summary.bankBcCardCount}종(회원사별 등록 가능 상품 수에 따라 다름)이며, 하나·신한·NH농협 일반 카드도 각 ${summary.hanaCardCount}종씩 별도 목록으로 추가했습니다. 확인 중 상품은 인정 실적에 합산하지 않습니다.`;
+    const catalogCount = products.length;
+    const issuerGroupCount = new Set(products.map((product) => product.issuer)).size;
+    $('#catalog-count-public').textContent = `${issuerGroupCount}개 발급사·회원사 상품 목록 · 상품 ${catalogCount}종 · 공식 판정 규칙 ${summary.supportedCardCount}종 · 규칙 확인 중 ${summary.pendingRuleCount}종`;
+    $('#catalog-count-notice').textContent = `현재 등록된 상품 ${catalogCount}종은 공식 실적 규칙을 확인했습니다. 이후 상품도 공식 자료에서 기준과 제외 항목을 확인한 뒤 순차 등록합니다. 최근 3개월 기준 상품은 해당 기간 거래내역을 포함해 분석해 주세요.`;
+    const release = window.CARDPILOT_RULES.release;
+    if (release) {
+      $('#rules-update-date').textContent = `최근 규칙 업데이트: ${release.updatedAt}`;
+      const history = $('#rules-update-history'); history.replaceChildren();
+      release.notes.forEach((note) => { const item = document.createElement('li'); item.textContent = note; history.append(item); });
+    }
     function selectedProductChanged() {
       state.transactions.forEach((item) => classify(item)); updateSummary(); renderRows(); markComparisonStale();
       renderCatalogDetail(currentProduct());
@@ -276,6 +330,7 @@
   setupProducts();
   $('#load-csv').addEventListener('click', loadFile); $('#analyze').addEventListener('click', analyze);
   $('#read-images').addEventListener('click', readImages); $('#extract-images').addEventListener('click', extractImageRows);
+  $('#export-csv').addEventListener('click', exportTransactions);
   $('#filter-rows').addEventListener('input', (event) => { state.query = event.target.value; state.page = 0; renderRows(); });
   $('#previous-page').addEventListener('click', () => { state.page -= 1; renderRows(); }); $('#next-page').addEventListener('click', () => { state.page += 1; renderRows(); });
   $('#clear-analysis').addEventListener('click', async () => {

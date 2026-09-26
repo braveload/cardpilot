@@ -1140,6 +1140,14 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 186, catalogCardCount: 186, pendingRuleCount: 0, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 186, catalogCardCount: 186, pendingRuleCount: 0, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 },
+    release: {
+      updatedAt: '2026-09-26',
+      notes: [
+        'BC 바로카드 KaPick·On&Off·리워드 플러스·로스트아크·신세계 SEVEN FLEX·어디로든 그린카드(V3) 6종의 공식 기준을 확인해 추가했습니다.',
+        '그린카드 상품명을 공식 안내에 맞춰 어디로든 그린카드(V3)로 바로잡았습니다.',
+        '전체 186종은 공식 규칙 확인 완료 상태입니다. 상품별 기준 확인일은 카드 선택 후 확인할 수 있습니다.'
+      ]
+    }
   };
 })();

@@ -117,7 +117,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <button class="btn" id="load-csv" type="button">CSV 불러오기</button>
         </div>
         <p id="file-status" class="muted" aria-live="polite">파일을 선택해 주세요. CSV 파일은 업로드되지 않으며 현재 브라우저에서만 읽습니다.</p>
-        <p class="muted">CSV를 여러 번 불러오면 거래가 추가됩니다. 최근 3개월 실적 기준 상품은 해당 3개월의 내역을 모두 불러와 분석하세요.</p>
+        <p class="muted">CSV를 여러 번 불러오면 날짜·가맹점·금액이 같은 거래를 감지해 중복 여부를 확인합니다. 최근 3개월 실적 기준 상품은 해당 3개월의 내역을 모두 불러와 분석하세요.</p>
         <div id="mapping-panel" hidden>
           <h3 style="margin:24px 0 12px;font-size:18px;">열 확인</h3>
           <p class="muted">첫 행을 제목행으로 읽습니다. 자동 선택된 열을 확인하고 필요하면 바꿔 주세요.</p>
@@ -149,6 +149,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <div class="form-row" style="margin-top:24px;align-items:center;">
             <h3 style="margin:0;font-size:18px;flex:1;">거래별 판정 및 근거</h3>
             <input class="search-box" id="filter-rows" type="search" placeholder="가맹점·근거 검색" aria-label="거래 검색">
+            <button class="btn secondary" id="export-csv" type="button">상세 내역 CSV 다운로드</button>
             <button class="btn secondary" id="clear-analysis" type="button">분석 초기화</button>
           </div>
           <p class="muted">날짜·가맹점·금액을 직접 고친 뒤 판정을 선택하면 합계가 다시 계산됩니다. ‘인정 예상’은 공식 카드사 확정값이 아닙니다.</p>
@@ -277,7 +278,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <div style="padding:18px 20px;font-size:14px;font-weight:700;">카드사별 규칙 최신화</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">자사만</div>
           <div style="padding:18px 20px;font-size:13px;color:#5B6472;border-left:1px solid #E4E8EF;text-align:center;">미반영</div>
-          <div style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">21개 발급사·회원사 목록 · 상품 180종 · 공식 판정 규칙 180종 · 규칙 확인 중 0종</div>
+          <div id="catalog-count-public" style="padding:18px 20px;font-size:13px;color:#5B6472;background:#ECF1FE;border-left:1px solid #E4E8EF;text-align:center;">상품 186종 · 공식 판정 규칙 186종 · 규칙 확인 중 0종</div>
         </div>
         </div>
       </div>
@@ -330,13 +331,21 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
     </div>
   </section>
 
+  <section style="width:100%;background:#FFFFFF;">
+    <div style="max-width:1120px;margin:0 auto;padding:56px 24px;">
+      <h2 class="section-title" style="margin:0 0 12px;font-size:24px;font-weight:900;">카드 규칙 업데이트 이력</h2>
+      <p id="rules-update-date" class="muted" style="margin:0 0 12px;"></p>
+      <ul id="rules-update-history" class="muted" style="margin:0;padding-left:22px;"></ul>
+    </div>
+  </section>
+
   <section id="beta" style="width:100%;background:#12172B;">
     <div style="max-width:640px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;">
       <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(36,81,224,0.18);color:#8FA8F5;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;">
         서비스 문의
       </div>
       <h2 style="margin:0;font-size:32px;font-weight:900;color:#fff;letter-spacing:-0.02em;">카드 규칙은 계속<br>확인하고 업데이트합니다</h2>
-          <p style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">현재 등록된 상품 180종은 공식 실적 규칙을 확인했습니다. 이후 상품도 공식 자료에서 기준과 제외 항목을 확인한 뒤 순차 등록합니다. 최근 3개월 기준 상품은 해당 기간 거래내역을 포함해 분석해 주세요.</p>
+          <p id="catalog-count-notice" style="margin:0;font-size:15px;line-height:1.7;color:#AAB2C5;max-width:440px;">등록된 상품 186종의 공식 실적 규칙을 확인했습니다. 이후 상품도 공식 자료에서 기준과 제외 항목을 확인한 뒤 순차 등록합니다. 최근 3개월 기준 상품은 해당 기간 거래내역을 포함해 분석해 주세요.</p>
 
       <a href="https://haru-hankan.onrender.com/#contact" style="margin-top:12px;width:100%;max-width:420px;padding:15px 22px;border-radius:8px;background:#2451E0;color:#fff;font-size:15px;font-weight:700;">하루한칸 문의폼 열기</a>
       <nav aria-label="관련 링크" style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:20px;font-size:13px;">

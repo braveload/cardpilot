@@ -2,7 +2,7 @@
 
 하루한칸과 연결되는 카드파일럿 웹 서비스입니다. CSV 또는 거래내역 화면 캡처에서 거래를 불러와 검토하고, 등록된 카드별 예상 규칙과 거래별 근거, 예상 인정 실적을 확인합니다.
 
-- 운영 주소: https://braveload.github.io/cardpilot/
+- 운영 주소(Render): https://cardpilot-k5y7.onrender.com/
 - 게시 파일: `index.html`, `cardpilot.js`, `card-rules.js`
 - CSV: 브라우저 안에서 읽으며 UTF-8/EUC-KR, 최대 20MB 지원
 - 캡처 이미지: 장당 10MB 이하, 최대 5장, 브라우저에서 Tesseract.js 한국어 OCR. 텍스트를 사용자가 교정한 후 거래 후보로 추가함
@@ -15,6 +15,6 @@
 - 판정: 상품설명서 문구 및 거래 텍스트의 키워드 기반 예상이며 카드사의 업종코드, 할인 적용, 정산 결과를 대체하지 않음. 조건이 있는 거래는 확인 필요 상태로 표시
 - 문의·개인정보처리방침·이용안내: 하루한칸 홈페이지 문서 연결
 
-## GitHub Pages
+## 배포 경로
 
-`render-deploy` 브랜치를 Render 정적 사이트에 연결해 자동 배포합니다. `main` 브랜치 루트의 GitHub Pages는 별도 운영입니다. 카드별 규칙을 수정할 때는 `card-rules.js`의 공식 출처와 기준일을 함께 갱신하고, `index.html`의 예상 판정/개인정보 안내를 유지합니다.
+`render-deploy` 브랜치를 Render 정적 사이트에 연결해 운영 주소로 자동 배포합니다. `main` 브랜치 루트의 GitHub Pages는 별도 주소로 남아 있을 수 있습니다. 카드별 규칙을 수정할 때는 `card-rules.js`의 공식 출처와 기준일, `release` 변경 이력을 함께 갱신하고 `index.html`의 예상 판정/개인정보 안내를 유지합니다.
