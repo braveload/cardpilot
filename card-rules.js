@@ -873,6 +873,85 @@
         sourceTitle: 'BC카드 공식 BC 바로 에어 플러스 스카이패스 상품 안내', checkedAt: '2026-09-25'
       },
       {
+        id: 'bc-kapick', name: 'BC 바로 KaPick', issuer: 'BC 바로카드', threshold: 150000,
+        thresholdLabel: '15만원 (Pick 적립 기준; 카카오페이·해외 기본 적립은 실적 무관)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '세금·4대보험·공공요금·공공기관', keywords: ['세금', '국세', '지방세', '관세', '4대보험', '건강보험', '국민연금', '고용보험', '산재보험', '상하수도', '전기요금', '도시가스', '범칙금', '벌과금', '과태료', '공공기관', '공공단체'] },
+          { label: '관리비·학교 납입금·등록금', keywords: ['아파트관리비', '학교납입금', '초중고납입금', '대학등록금'] },
+          { label: '상품권·선불전자지급수단 구매/충전', keywords: ['상품권', '선불카드', '선불전자', '선불충전', '기프트카드'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ], conditional: [],
+        source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=103862',
+        sourceTitle: 'BC카드 공식 BC 바로 KaPick 상품 안내·서비스 제공 조건·전월실적 제외 항목', checkedAt: '2026-09-26'
+      },
+      {
+        id: 'bc-on-off', name: 'BC 바로 On&Off 카드', issuer: 'BC 바로카드', threshold: 300000,
+        thresholdLabel: '전월 국내외 30만원 (국내·해외 할인 기준)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '아파트관리비·공공요금', keywords: ['아파트관리비', '상하수도', '전기요금', '도시가스'] },
+          { label: '상품권·선불전자지급수단 구매/충전', keywords: ['상품권', '선불카드', '선불전자', '선불충전', '기프트카드'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ], conditional: [],
+        source: 'https://www.bccard.com/app/card/app/CreditCardMain.do?gdsno=1032030000',
+        sourceTitle: 'BC카드 공식 BC 바로 On&Off 상품 안내·서비스 제공 조건·전월실적 제외 항목', checkedAt: '2026-09-26'
+      },
+      {
+        id: 'bc-reward-plus', name: 'BC 바로 리워드 플러스', issuer: 'BC 바로카드', threshold: 300000,
+        thresholdLabel: '전월 30만원부터 (생활 카테고리 이용액은 실적 제외; 기본 적립 구간 30/70/100/200만원)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '세금·4대보험·공공요금·공공기관', keywords: ['국세', '지방세', '관세', '4대보험', '건강보험', '국민연금', '고용보험', '산재보험', '상하수도', '전기요금', '도시가스', '범칙금', '벌과금', '과태료', '공공기관', '공공단체'] },
+          { label: '관리비·학교 납입금·등록금', keywords: ['아파트관리비', '학교납입금', '초중고납입금', '대학등록금'] },
+          { label: '상품권·선불전자지급수단 구매/충전', keywords: ['상품권', '선불카드', '선불전자', '선불충전', '기프트카드'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ],
+        conditional: [{ label: '생활 카테고리 이용액은 전월 실적 제외 (주유·충전·통신·교통·학원/유치원·서점·관리비 등)', keywords: ['주유', '주유소', '충전소', '전기차충전', '통신요금', '휴대폰요금', '시내버스', '지하철', '대중교통', '학원', '유치원', '교보문고', '영풍문고', 'yes24', '아파트관리비'] }],
+        source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=101921',
+        sourceTitle: 'BC카드 공식 BC 바로 리워드 플러스 상품 안내·서비스 제공 조건·전월실적 제외 항목', checkedAt: '2026-09-26'
+      },
+      {
+        id: 'bc-lost-ark', name: 'BC 바로 로스트아크 카드', issuer: 'BC 바로카드', threshold: 300000,
+        thresholdLabel: '전월 국내 30만원 (로열 크리스탈 10% 할인 기준; 기본 할인은 실적 무관)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '세금·4대보험·공공요금·공공기관', keywords: ['국세', '지방세', '관세', '4대보험', '건강보험', '국민연금', '고용보험', '산재보험', '장애인고용부담금', '전기요금', '우편요금', '도시가스', '상하수도', '여권발급', '과태료', '범칙금', '벌금', '공공기관', '공공단체'] },
+          { label: '관리비·학교 납입금·등록금', keywords: ['아파트관리비', '학교납입금', '초중고납입금', '대학등록금'] },
+          { label: '상품권·선불카드 구매/충전', keywords: ['상품권', '선불카드', '선불충전', '기프트카드'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ], conditional: [],
+        source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=101686',
+        sourceTitle: 'BC카드 공식 로스트아크 카드 상품 안내·서비스 제공 조건·전월실적 제외 항목', checkedAt: '2026-09-26'
+      },
+      {
+        id: 'bc-shinsegae-seven-flex', name: '신세계 BC 바로 SEVEN FLEX', issuer: 'BC 바로카드', threshold: 300000,
+        thresholdLabel: '전월 30만원 (FLEX 카테고리 이용액은 실적 제외; 할인 한도는 30/60/90/120만원 구간)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '세금·4대보험·공공요금·공공기관', keywords: ['국세', '지방세', '관세', '4대보험', '건강보험', '국민연금', '고용보험', '산재보험', '상하수도', '전기요금', '도시가스', '범칙금', '벌과금', '과태료', '공공기관', '공공단체'] },
+          { label: '관리비·학교 납입금·등록금', keywords: ['아파트관리비', '학교납입금', '초중고납입금', '대학등록금'] },
+          { label: '상품권·선불전자지급수단 구매/충전', keywords: ['상품권', '선불카드', '선불전자', '선불충전', '기프트카드'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ],
+        conditional: [{ label: 'FLEX 카테고리 이용액은 전월 실적 제외 (신세계·W Concept·헬스/골프/병원/약국/미용 등 해당 업종)', keywords: ['신세계', 'wconcept', 'w concept', '헬스', '피트니스', '골프', '병원', '의원', '한의원', '치과', '약국', '동물병원', '미용실', '이발소'] }],
+        source: 'https://www.bccard.com/app/card/CreditCardMain.do?gdsno=101883',
+        sourceTitle: 'BC카드 공식 신세계 BC 바로 SEVEN FLEX 상품 안내·서비스 제공 조건·전월실적 제외 항목', checkedAt: '2026-09-26'
+      },
+      {
+        id: 'bc-anywhere-green-v3', name: 'BC 바로 어디로든 그린카드(V3)', issuer: 'BC 바로카드', threshold: 300000,
+        thresholdLabel: '전월 국내외 30만원 (60만원 이상 통합 적립한도 상향)', useCommonExclusions: false,
+        extraExclusions: [
+          { label: '카드대출·연회비·연체료·수수료·이자', keywords: ['현금서비스', '단기카드대출', '카드론', '장기카드대출', '연회비', '연체료', '수수료', '이자'] },
+          { label: '세금·4대보험·공공요금·공공기관', keywords: ['건강보험', '국민연금', '고용보험', '산재보험', '장애인고용부담금', '국세', '지방세', '관세', '전기요금', '우편요금', '상하수도', '도시가스', '여권발급', '과태료', '범칙금', '벌금', '공공기관', '공공단체'] },
+          { label: '학교 납입금·대학 등록금', keywords: ['초중고납입금', '학교납입금', '대학등록금'] },
+          { label: '아파트 관리비·기프트/선불카드·전자지급수단·상품권', keywords: ['아파트관리비', '기프트카드', '선불카드', '전자지급수단', '사이버머니', '상품권', '선불충전'] },
+          { label: '매출 취소 금액', keywords: ['취소', '환불'] }
+        ], conditional: [],
+        source: 'https://www.bccard.com/down/individual/customer/102318.pdf',
+        sourceTitle: 'BC카드 공식 BC 바로 어디로든 그린카드(V3) 상품 안내 (2026.08.19 개정본) · 전월 실적 기준·제외 항목', checkedAt: '2026-09-26'
+      },
+      {
         id: 'kb-my-wesh', name: 'KB국민 My WE:SH 카드', issuer: 'KB국민카드', threshold: 400000,
         thresholdLabel: '40만원 (일상·선택 할인 기준)',
         extraExclusions: [
@@ -1061,6 +1140,6 @@
       ...pendingProducts
     ],
     commonExclusions,
-    summary: { supportedIssuerCount: 11, supportedCardCount: 180, catalogCardCount: 180, pendingRuleCount: 0, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
+    summary: { supportedIssuerCount: 11, supportedCardCount: 186, catalogCardCount: 186, pendingRuleCount: 0, kbCardCount: 10, hyundaiCardCount: 10, bankBcIssuerCount: 12, bankBcCardCount: 94, samsungCardCount: 10, wooriCardCount: 10, lotteCardCount: 10, hanaCardCount: 10, shinhanCardCount: 10, nhCardCount: 10 }
   };
 })();
