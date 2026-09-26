@@ -129,6 +129,35 @@
     const thresholdLabel = product.thresholdLabel || money(threshold);
     $('#product-rule-summary').textContent = threshold ? `공식 안내로 확인한 ${supported}종 규칙 등록 · 현재 인정 예상 ${money(sums.included)} / 기준 ${thresholdLabel} · 남은 예상액 ${money(Math.max(0, threshold - sums.included))}. 상품에 따라 추가 혜택 기준은 다를 수 있습니다.` : `공식 안내로 확인한 ${supported}종 규칙 등록 · ${thresholdLabel}. 카드별 거래 제외 기준은 등록된 공식 안내를 확인하세요.`;
   }
+  function renderSamplePreview() {
+    const sampleProduct = products.find((product) => product.id === 'bc-kpass') || products[0];
+    const samples = [
+      { date: '2026-09-03', merchant: '스타벅스 강남점', amount: 8500 },
+      { date: '2026-09-05', merchant: '아파트관리비', amount: 120000 },
+      { date: '2026-09-08', merchant: '온라인 상품권몰', amount: 50000 }
+    ].map((entry, index) => {
+      const item = { ...entry, id: -index - 1, extra: '', discount: '', note: '', status: 'pending', evidence: '' };
+      classify(item, sampleProduct); return item;
+    });
+    const totals = { included: 0, excluded: 0, pending: 0, conditional: 0 };
+    samples.forEach((item) => { totals[item.status] = (totals[item.status] || 0) + Math.max(0, item.amount); });
+    const labels = { included: '인정 예상', excluded: '제외 예상', pending: '확인 필요', conditional: '조건 확인' };
+    $('#sample-product').textContent = `${sampleProduct.issuer} · ${sampleProduct.name} · ${sampleProduct.thresholdLabel || `전월 실적 기준 ${money(sampleProduct.threshold || 0)}`}`;
+    $('#sample-included').textContent = money(totals.included);
+    $('#sample-excluded').textContent = money(totals.excluded);
+    $('#sample-pending').textContent = money(totals.pending + totals.conditional);
+    $('#sample-count').textContent = `${samples.length}건`;
+    const tbody = $('#sample-rows'); tbody.replaceChildren();
+    samples.forEach((item) => {
+      const tr = document.createElement('tr');
+      [item.date, item.merchant, money(item.amount), `${labels[item.status]} · ${item.evidence}`].forEach((value) => {
+        const td = document.createElement('td'); td.textContent = value; tr.append(td);
+      });
+      tbody.append(tr);
+    });
+    const threshold = sampleProduct.threshold || 0;
+    $('#sample-threshold').textContent = `기준 참고: ${sampleProduct.thresholdLabel || (threshold ? `전월 실적 ${money(threshold)}` : '전월 실적 기준 없음')} · 인정 예상 기준 남은 금액 ${money(Math.max(0, threshold - totals.included))}`;
+  }
   function visibleTransactions() {
     const query = normalize(state.query);
     return state.transactions.filter((item) => !query || normalize([item.date, item.merchant, item.extra, item.evidence, item.note].join(' ')).includes(query));
@@ -331,6 +360,16 @@
   $('#load-csv').addEventListener('click', loadFile); $('#analyze').addEventListener('click', analyze);
   $('#read-images').addEventListener('click', readImages); $('#extract-images').addEventListener('click', extractImageRows);
   $('#export-csv').addEventListener('click', exportTransactions);
+  $('#show-sample').addEventListener('click', (event) => {
+    const preview = $('#sample-preview');
+    if (preview.hidden) {
+      renderSamplePreview(); preview.hidden = false;
+      event.currentTarget.textContent = '샘플 결과 닫기'; event.currentTarget.setAttribute('aria-expanded', 'true');
+    } else {
+      preview.hidden = true;
+      event.currentTarget.textContent = '샘플 결과 먼저 보기'; event.currentTarget.setAttribute('aria-expanded', 'false');
+    }
+  });
   $('#filter-rows').addEventListener('input', (event) => { state.query = event.target.value; state.page = 0; renderRows(); });
   $('#previous-page').addEventListener('click', () => { state.page -= 1; renderRows(); }); $('#next-page').addEventListener('click', () => { state.page += 1; renderRows(); });
   $('#clear-analysis').addEventListener('click', async () => {

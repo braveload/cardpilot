@@ -3,7 +3,7 @@
 하루한칸과 연결되는 카드파일럿 웹 서비스입니다. CSV 또는 거래내역 화면 캡처에서 거래를 불러와 검토하고, 등록된 카드별 예상 규칙과 거래별 근거, 예상 인정 실적을 확인합니다.
 
 - 운영 주소(Render): https://cardpilot-k5y7.onrender.com/
-- 게시 파일: `index.html`, `cardpilot.js`, `card-rules.js`
+- 게시 파일: `index.html`, `cardpilot.js`, `card-rules.js`, `download-guide.html` (카드사별 이용내역 조회 및 파일 준비 안내)
 - CSV: 브라우저 안에서 읽으며 UTF-8/EUC-KR, 최대 20MB 지원
 - 캡처 이미지: 장당 10MB 이하, 최대 5장, 브라우저에서 Tesseract.js 한국어 OCR. 텍스트를 사용자가 교정한 후 거래 후보로 추가함
 - 데이터 보관: 분석 내용은 브라우저 메모리에서만 처리되고 새로고침/초기화 시 사라짐. 서버로 CSV·이미지 내용은 전송하지 않음. 이미지 OCR 시 엔진과 한국어 언어 모델은 CDN에서 브라우저가 내려받음
