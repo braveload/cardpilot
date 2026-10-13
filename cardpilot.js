@@ -3,6 +3,7 @@
 
   const $ = (selector) => document.querySelector(selector);
   const PAGE_SIZE = 100;
+  const cardTools = window.CARDPILOT_TOOLS || null;
   const state = { headers: [], rawRows: [], transactions: [], page: 0, query: '', ocrWorker: null };
   const headerAliases = {
     date: ['이용일', '거래일', '승인일', '사용일', '날짜', '일자', 'transaction date', 'date'],
@@ -57,7 +58,9 @@
   function duplicateKey(row) {
     const amount = parseAmount(row.amount);
     if (!row.date || !row.merchant || !Number.isFinite(amount)) return '';
-    return `${normalize(row.date)}|${normalize(row.merchant)}|${amount}`;
+    if (row.requiresCardLink && (!row.cardIdentity?.issuer || !row.cardIdentity?.last4)) return '';
+    const identity = row.requiresCardLink ? `${row.cardIdentity.issuer}|${row.cardIdentity.last4}|` : '';
+    return `${identity}${normalize(row.date)}|${normalize(row.merchant)}|${amount}`;
   }
   function csvCell(value, protectFormula = false) {
     let text = String(value ?? '');
@@ -72,7 +75,7 @@
       const product = products.find((entry) => entry.id === item.productId) || currentProduct();
       rows.push([
         item.sourceLabel || `CSV ${item.sourceIndex + 2}행`, item.date, item.merchant, item.amount,
-        product.issuer, product.name, statusLabels[item.status] || '확인 필요', item.evidence, item.note
+        item.requiresCardLink && !item.productId ? '카드 연결 확인 필요' : product.issuer, item.requiresCardLink && !item.productId ? '' : product.name, statusLabels[item.status] || '확인 필요', item.evidence, item.note
       ].map((value, index) => csvCell(value, index !== 3)));
     });
     const blob = new Blob([`\uFEFF${rows.map((row) => row.join(',')).join('\r\n')}`], { type: 'text/csv;charset=utf-8' });
@@ -90,7 +93,12 @@
     detail.innerHTML = `<p><strong>${escapeHtml(product.issuer)} · ${escapeHtml(product.name)}</strong></p><p class="muted">${escapeHtml(status)}</p><a href="${escapeHtml(product.source)}" target="_blank" rel="noopener">선택 상품의 공식 안내·규칙 근거 보기 ↗</a>`;
   }
 
-  function classify(transaction, product = currentProduct()) {
+  function classify(transaction, product = currentProduct(), simulation = false) {
+    if (transaction.requiresCardLink && !simulation) {
+      const card = (cardTools?.getMappings() || []).find((c) => c.id === transaction.cardMappingId && c.productId === transaction.linkedProductId && c.issuer === transaction.linkedIssuer && c.last4 === transaction.linkedLast4);
+      product = card && products.find((p) => p.id === card.productId);
+      if (!product) { transaction.productId = ''; transaction.status = 'pending'; transaction.evidence = '카드 연결 확인 필요: ' + (transaction.cardLinkReason || '기존 연결이 수정·해제되었습니다. 거래 카드를 직접 확인해 주세요.'); return; }
+    }
     const text = normalize([transaction.merchant, transaction.extra].join(' '));
     transaction.productId = product.id;
     if (!Number.isFinite(transaction.amount) || !transaction.merchant || transaction.amount <= 0) {
@@ -102,7 +110,11 @@
     const discountExempt = (product.discountExemptionKeywords || []).some((word) => text.includes(normalize(word)));
     const productRules = product.extraExclusions.filter((rule) => !(discountExempt && rule.discountOnly));
     const rules = [...(product.useCommonExclusions === false ? [] : window.CARDPILOT_RULES.commonExclusions), ...productRules];
-    const match = rules.find((rule) => rule.keywords.some((word) => text.includes(normalize(word))));
+    const discountValue = parseAmount(String(transaction.discount || '').replace('%', ''));
+    const discountStatus = normalize(transaction.discount || '');
+    const discountApplied = (Number.isFinite(discountValue) && discountValue > 0) || ['yes', 'true', 'y', '예'].includes(discountStatus) || discountStatus.includes('할인적용') || discountStatus.includes('할인받음');
+    const reportedDiscountRule = discountApplied ? productRules.find((rule) => rule.discountOnly) : null;
+    const match = reportedDiscountRule || rules.find((rule) => rule.keywords.some((word) => text.includes(normalize(word))));
     if (match) { transaction.status = 'excluded'; transaction.evidence = `제외 예상: ${match.label}. ${product.name} 공식 안내 기준 · `; }
     else {
       const conditional = (product.conditional || []).find((rule) => rule.keywords.some((word) => text.includes(normalize(word))));
@@ -124,10 +136,11 @@
       $('#product-rule-summary').textContent = `${product.name}: 상품 목록 등록 완료 · 공식 실적 기준 확인 중. 거래별 판정과 인정 실적 합산은 보류하며, 확인된 기존 규칙 ${window.CARDPILOT_RULES.summary.supportedCardCount}종은 계속 사용할 수 있습니다.`;
       return;
     }
+    const selectedIncluded = state.transactions.filter((item) => item.productId === product.id && item.status === 'included').reduce((sum, item) => sum + Math.max(0,item.amount),0);
     const threshold = product.threshold;
     const supported = window.CARDPILOT_RULES.summary.supportedCardCount;
     const thresholdLabel = product.thresholdLabel || money(threshold);
-    $('#product-rule-summary').textContent = threshold ? `공식 안내로 확인한 ${supported}종 규칙 등록 · 현재 인정 예상 ${money(sums.included)} / 기준 ${thresholdLabel} · 남은 예상액 ${money(Math.max(0, threshold - sums.included))}. 상품에 따라 추가 혜택 기준은 다를 수 있습니다.` : `공식 안내로 확인한 ${supported}종 규칙 등록 · ${thresholdLabel}. 카드별 거래 제외 기준은 등록된 공식 안내를 확인하세요.`;
+    $('#product-rule-summary').textContent = threshold ? `공식 안내로 확인한 ${supported}종 규칙 등록 · 선택 상품 거래의 인정 예상 ${money(selectedIncluded)} / 기준 ${thresholdLabel} · 남은 예상액 ${money(Math.max(0, threshold - selectedIncluded))}. 상품에 따라 추가 혜택 기준은 다를 수 있습니다.` : `공식 안내로 확인한 ${supported}종 규칙 등록 · ${thresholdLabel}. 카드별 거래 제외 기준은 등록된 공식 안내를 확인하세요.`;
   }
   function renderSamplePreview() {
     const sampleProduct = products.find((product) => product.id === 'bc-kpass') || products[0];
@@ -168,7 +181,15 @@
     visible.slice(state.page * PAGE_SIZE, (state.page + 1) * PAGE_SIZE).forEach((item) => {
       const tr = document.createElement('tr');
       const product = products.find((entry) => entry.id === item.productId) || currentProduct();
-      tr.innerHTML = `<td>${item.sourceLabel || `CSV ${item.sourceIndex + 2}행`}</td><td><div class="review-fields"><input aria-label="이용일 수정" maxlength="30" value="${escapeHtml(item.date)}" data-field="date" data-id="${item.id}"><input aria-label="가맹점 수정" maxlength="100" value="${escapeHtml(item.merchant)}" data-field="merchant" data-id="${item.id}"><input aria-label="금액 수정" inputmode="numeric" value="${escapeHtml(item.amount)}" data-field="amount" data-id="${item.id}"></div>${item.extra ? `<div class="muted">${escapeHtml(item.extra)}</div>` : ''}</td><td><select aria-label="${escapeHtml(item.merchant)} 판정" data-status="${item.id}"><option value="pending">확인 필요</option><option value="included">인정 예상</option><option value="excluded">제외 예상</option><option value="conditional">조건 확인</option></select></td><td><div class="evidence">${escapeHtml(item.evidence)} <a href="${escapeHtml(product.source)}" target="_blank" rel="noopener">상품 근거 ↗</a></div><input type="text" maxlength="160" placeholder="검토 메모 (선택)" aria-label="검토 메모" data-note="${item.id}" value="${escapeHtml(item.note)}"></td>`;
+      const sourceLink = item.requiresCardLink && !item.productId ? '카드 연결 후 상품 근거 확인' : `<a href="${escapeHtml(product.source)}" target="_blank" rel="noopener">상품 근거 ↗</a>`;
+      tr.innerHTML = `<td>${item.sourceLabel || `CSV ${item.sourceIndex + 2}행`}</td><td><div class="review-fields"><input aria-label="이용일 수정" maxlength="30" value="${escapeHtml(item.date)}" data-field="date" data-id="${item.id}"><input aria-label="가맹점 수정" maxlength="100" value="${escapeHtml(item.merchant)}" data-field="merchant" data-id="${item.id}"><input aria-label="금액 수정" inputmode="numeric" value="${escapeHtml(item.amount)}" data-field="amount" data-id="${item.id}"></div>${item.extra ? `<div class="muted">${escapeHtml(item.extra)}</div>` : ''}</td><td><select aria-label="${escapeHtml(item.merchant)} 판정" data-status="${item.id}"><option value="pending">확인 필요</option><option value="included">인정 예상</option><option value="excluded">제외 예상</option><option value="conditional">조건 확인</option></select></td><td><div class="evidence">${escapeHtml(item.evidence)} ${sourceLink}</div><input type="text" maxlength="160" placeholder="검토 메모 (선택)" aria-label="검토 메모" data-note="${item.id}" value="${escapeHtml(item.note)}"></td>`;
+      if (cardTools && item.requiresCardLink) {
+        const label = document.createElement('label'); label.textContent = '거래 카드 확인';
+        const select = document.createElement('select'); select.setAttribute('aria-label','거래 카드 연결'); select.dataset.card = String(item.id);
+        const none = document.createElement('option'); none.value = ''; none.textContent = '카드 연결 확인 필요'; select.append(none);
+        cardTools.getMappings().forEach((card) => { const option = document.createElement('option'); option.value = card.id; option.textContent = cardTools.cardLabel(card); select.append(option); });
+        if (item.productId) select.value = item.cardMappingId; label.append(select); tr.children[0].append(label);
+      }
       tr.querySelector('[data-status]').value = item.status; tbody.append(tr);
     });
     $('#page-label').textContent = `${state.page + 1} / ${pageCount} 페이지 · ${visible.length.toLocaleString('ko-KR')}건`;
@@ -189,7 +210,7 @@
       const sums = { included: 0, excluded: 0, pending: 0, conditional: 0 };
       state.transactions.forEach((item) => {
         const candidate = { ...item };
-        classify(candidate, product);
+        classify(candidate, product, true);
         sums[candidate.status] = (sums[candidate.status] || 0) + Math.max(0, candidate.amount);
       });
       return { product, sums };
@@ -225,7 +246,7 @@
     throw new Error('한국어 OCR 엔진을 불러오지 못했습니다. 네트워크 연결을 확인하거나 CSV를 이용해 주세요.');
   }
   function ingestRows(rows, source) {
-    const prepared = rows.map((row, index) => ({ row: { ...row, date: String(row.date || '').trim(), merchant: String(row.merchant || '').trim() }, index }));
+    const prepared = rows.map((row, index) => ({ row: { ...row, date: String(row.date || '').trim(), merchant: String(row.merchant || '').trim(), ...(source === '캡처' ? { requiresCardLink: true, cardIdentity: cardTools ? cardTools.detectCardIdentity(row.extra) : { issuer: '', last4: '', reason: '카드 연결 기능을 불러오지 못했습니다.' } } : {}) }, index }));
     const seen = new Set(state.transactions.map(duplicateKey).filter(Boolean));
     let duplicateCount = 0;
     prepared.forEach(({ row }) => {
@@ -243,6 +264,7 @@
       uniqueKeys.add(key); return true;
     }).map(({ row, index }, acceptedIndex) => {
       const amount = parseAmount(row.amount); const item = { id: state.transactions.length + acceptedIndex, sourceIndex: index, sourceLabel: source ? `${source} ${index + 1}` : '', date: row.date, merchant: row.merchant, extra: String(row.extra || '').trim(), amount: Number.isFinite(amount) ? amount : 0, status: 'pending', evidence: '', note: '', discount: row.discount || '' };
+      if (row.requiresCardLink) { item.requiresCardLink = true; item.cardIdentity = row.cardIdentity; const match = cardTools ? cardTools.resolveIdentity(row.cardIdentity) : { card: null, reason: row.cardIdentity.reason }; item.cardLinkReason = match.reason; if (match.card) bindCard(item,match.card); }
       classify(item); return item;
     });
     state.transactions.push(...accepted); state.page = Math.max(0, Math.ceil(state.transactions.length / PAGE_SIZE) - 1);
@@ -337,26 +359,76 @@
     } catch (error) { $('#image-status').textContent = `이미지 읽기 실패: ${error.message || '잠시 후 다시 시도해 주세요.'}`; }
     finally { $('#read-images').disabled = false; }
   }
-  function extractImageRows() {
-    const text = $('#ocr-text').value; const rows = [];
-    const amountPattern = /(?:₩\s*)?(-?\(?\d[\d,]*(?:원)?\)?)(?:\s*원)?/g;
-    text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).forEach((line) => {
-      const matches = [...line.matchAll(amountPattern)]; if (!matches.length) return;
-      const match = matches[matches.length - 1]; const amount = parseAmount(match[1]);
-      if (!Number.isFinite(amount) || amount <= 0) return;
-      let before = line.slice(0, match.index).trim(); let date = '';
-      const dateMatch = before.match(/(20\d{2}[./년 -]?\d{1,2}[./월 -]?\d{1,2}일?|\d{1,2}[./-]\d{1,2})/);
-      if (dateMatch) { date = dateMatch[0]; before = before.replace(dateMatch[0], ' ').trim(); }
-      const merchant = before.replace(/[|│·•:：]/g, ' ').replace(/\s+/g, ' ').trim();
-      if (!merchant || /합계|총액|누계|이용한도|결제예정|청구금액|잔액/.test(merchant)) return;
-      rows.push({ date, merchant, amount: match[1], extra: line, discount: '' });
-    });
-    if (!rows.length) { $('#image-status').textContent = '거래 후보를 찾지 못했습니다. 개인정보를 가린 상태로 원본에서 날짜·가맹점·금액을 복사해 인식 결과에 붙여넣거나 CSV를 이용해 주세요.'; return; }
-    ingestRows(rows, '캡처');
+  // OCR numbers are not amounts unless currency/payment context identifies them.
+  function parseImageText(text) {
+    const rows = [];
+    const datePattern = /(?:20\d{2}[./년 -]+\d{1,2}[./월 -]+\d{1,2}일?|\d{1,2}[./-]\d{1,2})(?!\d)/;
+    const timePattern = /\b\d{1,2}:\d{2}(?::\d{2})?\b/g;
+    const amountPattern = /(?:₩\s*(-?\d[\d,]*)|(-?\d[\d,]*)\s*원)/g;
+    const totals = /합계|총액|누계|누적|이용한도|결제예정|청구금액|잔액|한도/;
+    const metadata = /^(?:\[?Web\s*발신\]?|\[?웹\s*발신\]?|시간|일시|승인일|이용일|거래일|카드번호|승인번호|일시불|할부|본인|가족|취소|승인|결제|이용금액|승인금액|님)/i;
+    function amountOf(line) {
+      if (totals.test(line)) return null;
+      const matches = [...line.matchAll(amountPattern)];
+      // More than one payment amount needs correction, never choose one arbitrarily.
+      if (matches.length !== 1) return null;
+      return { amount: parseAmount(matches[0][1] || matches[0][2]), raw: matches[0][0] };
+    }
+    function merchantOf(line) {
+      if (totals.test(line)) return '';
+      let value = line.replace(datePattern, ' ').replace(timePattern, ' ').replace(amountPattern, ' ')
+        .replace(/^(?:가맹점명?|이용처|거래처|상호명)\s*[:：]?\s*/, '')
+        .replace(/(?:일시불|할부)/g, ' ').replace(/[|│·•:：]/g, ' ').trim();
+      if (metadata.test(value) || /카드|승인|\*|님|\[|\]|누적/.test(value) || /^[\d\s./()-]+$/.test(value)) return '';
+      return /[가-힣a-zA-Z]/.test(value) ? value.replace(/\s+/g, ' ') : '';
+    }
+    const lines = String(text || '').split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    let block = [];
+    function flush() {
+      if (!block.length) return;
+      const dates = block.map((line) => line.match(datePattern)?.[0]).filter(Boolean);
+      const amounts = block.map(amountOf).filter(Boolean);
+      const merchants = block.map(merchantOf).filter(Boolean);
+      rows.push({ date: dates[0] || '', merchant: merchants.length === 1 ? merchants[0] : '',
+        amount: amounts.length === 1 ? (block.some((line) => /취소|환불/.test(line)) ? -Math.abs(amounts[0].amount) : amounts[0].amount) : '', extra: block.join('\n'), discount: '' });
+      block = [];
+    }
+    for (const line of lines) {
+      const webHeader = /^\[?\s*(?:Web\s*발신|웹\s*발신)\s*\]?$/i.test(line);
+      const approvalHeader = /(?:카드|신한|삼성|현대|롯데|국민|하나|우리|농협|BC).*(?:승인|취소)|(?:승인|취소).*(?:카드)/i.test(line);
+      if (webHeader) { flush(); block.push(line); continue; }
+      if (approvalHeader) {
+        if (block.some((entry) => !/^\[?\s*(?:Web\s*발신|웹\s*발신)\s*\]?$/i.test(entry))) flush();
+        block.push(line); continue;
+      }
+      if (block.length) { block.push(line); continue; }
+      // Statement rows must contain a date, merchant and amount on the same line.
+      const date = line.match(datePattern)?.[0];
+      let payment = amountOf(line);
+      let merchant = merchantOf(line);
+      if (!payment && date && !totals.test(line)) {
+        const remainder = line.replace(datePattern, ' ').replace(timePattern, ' ');
+        const bare = remainder.match(/\s(-?\d[\d,]*)\s*$/);
+        if (bare) { payment = { amount: parseAmount(bare[1]) }; merchant = merchantOf(remainder.slice(0, bare.index)); }
+      }
+      if (date && payment && merchant) rows.push({ date, merchant, amount: payment.amount, extra: line, discount: '' });
+    }
+    flush();
+    return rows;
   }
+  function extractImageRows() {
+    const rows = parseImageText($('#ocr-text').value);
+    if (!rows.length) { $('#image-status').textContent = '거래 후보를 찾지 못했습니다. 날짜·가맹점·결제금액이 포함된 문자를 확인하거나 CSV를 이용해 주세요.'; return; }
+    markComparisonStale();
+    ingestRows(rows, '캡처');
+    const incomplete = rows.filter((row) => !row.merchant || !Number.isFinite(parseAmount(row.amount)) || parseAmount(row.amount) <= 0).length;
+    $('#image-status').textContent = `${rows.length}건 거래 후보를 추출했습니다.${incomplete ? ` ${incomplete}건은 가맹점·금액 확인이 필요하며 실적에 합산하지 않습니다.` : ''} 원본과 대조해 주세요.`;
+  }
+  function bindCard(item, card) { item.requiresCardLink = true; item.cardMappingId = card.id; item.linkedProductId = card.productId; item.linkedIssuer = card.issuer; item.linkedLast4 = card.last4; item.cardLinkReason = ''; }
   function reclassify(item) { classify(item); }
 
   setupProducts();
+  if (cardTools) cardTools.setup(() => { state.transactions.forEach((item) => classify(item)); if (state.transactions.length) { updateSummary(); renderRows(); } markComparisonStale(); });
   $('#load-csv').addEventListener('click', loadFile); $('#analyze').addEventListener('click', analyze);
   $('#read-images').addEventListener('click', readImages); $('#extract-images').addEventListener('click', extractImageRows);
   $('#export-csv').addEventListener('click', exportTransactions);
@@ -374,14 +446,21 @@
   $('#previous-page').addEventListener('click', () => { state.page -= 1; renderRows(); }); $('#next-page').addEventListener('click', () => { state.page += 1; renderRows(); });
   $('#clear-analysis').addEventListener('click', async () => {
     if (state.ocrWorker) { await state.ocrWorker.terminate(); state.ocrWorker = null; }
+    if (cardTools) cardTools.clearSession();
     state.headers = []; state.rawRows = []; state.transactions = []; state.page = 0; state.query = '';
     $('#csv-file').value = ''; $('#statement-images').value = ''; $('#ocr-text').value = ''; $('#ocr-review').hidden = true; $('#filter-rows').value = '';
     $('#mapping-panel').hidden = true; $('#results').hidden = true; $('#file-status').textContent = '분석 데이터를 초기화했습니다. 파일은 서버로 전송되지 않습니다.';
     $('#image-status').textContent = '이미지 OCR을 시작할 때 한국어 인식 엔진을 불러옵니다.';
   });
   $('#transaction-rows').addEventListener('change', (event) => {
-    const id = Number(event.target.dataset.id ?? event.target.dataset.status ?? event.target.dataset.note); const item = state.transactions[id]; if (!item) return;
-    if (event.target.dataset.status !== undefined) item.status = event.target.value;
+    const id = Number(event.target.dataset.id ?? event.target.dataset.card ?? event.target.dataset.status ?? event.target.dataset.note); const item = state.transactions[id]; if (!item) return;
+    if (event.target.dataset.card !== undefined) {
+      const card = cardTools.getMappings().find((c) => c.id === event.target.value);
+      if (card) bindCard(item,card); else { item.cardMappingId = ''; item.requiresCardLink = true; item.cardLinkReason = '거래 카드가 선택되지 않았습니다.'; }
+      classify(item); renderRows(); markComparisonStale();
+    } else if (event.target.dataset.status !== undefined) {
+      if (item.requiresCardLink && !item.productId) { classify(item); renderRows(); } else item.status = event.target.value;
+    }
     else if (event.target.dataset.note !== undefined) item.note = event.target.value;
     else {
       const field = event.target.dataset.field;

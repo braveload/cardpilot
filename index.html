@@ -48,6 +48,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
 @media(max-width:760px){.tool-wrap{padding:40px 16px}.tool-card{padding:18px}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-value{font-size:19px}}
 @media(max-width:600px){.product-grid{grid-template-columns:1fr}.review-fields{grid-template-columns:1fr}}
 @media(max-width:600px){.catalog-controls{grid-template-columns:1fr}}
+.feature-panel{margin-top:24px;padding:22px;border:1px solid #dbe3f0;border-radius:14px;background:#fafbfe}.feature-panel h3{margin:0 0 10px;font-size:20px}.feature-actions{margin-top:14px}.wallet-list{list-style:none;padding:0}.wallet-list li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 0;border-top:1px solid #dbe3f0}.wallet-list span{flex:1;min-width:190px}.check-line{display:flex;align-items:flex-start;gap:10px;margin:14px 0;font-size:14px;line-height:1.7}.check-line input{margin-top:5px;flex-shrink:0}.benefit-details{margin:20px 0;border:1px solid #dbe3f0;border-radius:10px;padding:16px}.benefit-details summary{font-weight:700;cursor:pointer}.recommendation-warning{margin:18px 0;padding:18px;border:2px solid #a11212;border-radius:10px;background:#fff3f3;color:#a11212}.recommendation-warning h4{font-size:17px;margin:0 0 8px}.recommendation-warning strong{display:block;font-size:22px;font-weight:900;line-height:1.6}.feature-panel input,.feature-panel select{max-width:100%;min-width:0}.feature-panel .field{min-width:190px}.feature-panel input[type=checkbox]{width:18px;height:18px}.feature-panel .table-wrap td{white-space:normal}.feature-panel .table-wrap table{min-width:650px}@media(max-width:600px){.feature-panel{padding:16px}.recommendation-warning strong{font-size:21px}.feature-panel .field{flex-basis:100%}}
+.benefit-details-official{margin:20px 0;border:1px solid #dbe3f0;border-radius:10px;padding:16px}.benefit-details-official summary{font-weight:700;cursor:pointer}#official-detail ul{font-size:13px;line-height:1.7;padding-left:20px}
 </style>
 </head>
 <body>
@@ -126,9 +128,102 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
           <div class="summary-card" style="flex:1.5;min-width:240px;"><div class="summary-label">상품 규칙 업데이트</div><div id="product-rule-summary" class="muted">공식 안내 확인 완료 상품부터 순차 지원합니다.</div></div>
         </div>
         <div id="catalog-detail" class="catalog-detail" aria-live="polite"></div>
+        <section id="wallet" class="feature-panel" aria-labelledby="wallet-heading">
+          <h3 id="wallet-heading">내 카드 연결</h3>
+          <p class="muted">문자에 표시된 카드사와 끝 4자리를 보유 상품에 직접 연결하세요. 카드사 연동 없이 동작하며 끝자리로 상품을 추측하지 않습니다. 같은 카드사에서 끝자리가 겹치면 자동 구분할 수 없습니다.</p>
+          <form id="wallet-form" novalidate>
+            <div class="form-row">
+              <div class="field"><label for="wallet-issuer">문자에 표시되는 카드사</label><select id="wallet-issuer"></select></div>
+              <div class="field"><label for="wallet-last4">카드 끝 4자리만</label><input id="wallet-last4" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="예: 1234" aria-describedby="wallet-privacy"></div>
+              <div class="field"><label for="wallet-product">내가 보유한 상품</label><select id="wallet-product"></select></div>
+            </div>
+            <div class="form-row feature-actions"><button id="wallet-save" class="btn" type="submit">카드 연결 저장</button><button id="wallet-cancel" class="btn secondary" type="button">수정 취소</button><button id="wallet-clear" class="btn secondary" type="button">저장한 카드 모두 해제</button></div>
+          </form>
+          <p id="wallet-privacy" class="muted">저장되는 정보는 카드사·끝 4자리·상품 연결뿐입니다. 전체 카드번호·CVC·비밀번호·인증정보는 입력하지 마세요. 이 브라우저에 저장한 연결은 새로고침 후에도 남으며 연결 해제로 삭제할 수 있습니다. 거래 원문과 금액은 저장하지 않습니다.</p>
+          <p id="wallet-status" class="muted" role="status"></p>
+          <p id="wallet-empty" class="muted">아직 연결한 카드가 없습니다. 미등록·모호한 문자는 확인 필요로 보류합니다.</p>
+          <ul id="wallet-list" class="wallet-list" aria-label="저장한 카드 연결"></ul>
+        </section>
+        <section id="purchase-comparison" class="feature-panel" aria-labelledby="purchase-heading">
+          <h3 id="purchase-heading">결제 전 예상 혜택 비교</h3>
+          <p class="muted">공식 자동 비교는 BC 바로카드의 확인된 상품 조건을 적용합니다. 자동 적용 밖의 상품은 사용자가 확인한 <strong>원화 정률 할인</strong> 조건으로 수동 보조 비교할 수 있습니다. 자동 비교의 포인트·마일은 각 단위로 따로 표시합니다. 수동 보조 비교에서는 건별/공유/구간별 한도·포인트·마일을 지원하지 않습니다. 자동 조건의 확인 범위 밖이나 정보 누락은 산정하지 않습니다.</p>
+          <aside class="recommendation-warning" id="purchase-input-warning" aria-labelledby="input-warning-title"><h4 id="input-warning-title">비교 전 꼭 확인하세요</h4><strong>누락된 사용 내역이나 혜택 한도 정보가 있으면 실제 결과와 달라질 수 있습니다.</strong></aside>
+          <div class="field" style="margin-top:16px"><label for="purchase-mode">비교 방식</label><select id="purchase-mode"><option value="official">BC 바로카드 공식 조건 자동 비교</option><option value="manual">사용자 확인 조건 수동 보조 비교</option></select></div>
+          <details id="official-benefits" class="benefit-details-official" open>
+            <summary>BC 바로카드: 공식 조건과 개인별 확인 정보</summary>
+            <p class="muted">등록된 BC 바로카드 12종의 확인된 국내 혜택 영역을 자동 적용합니다. 카드사 약관 버전이 다르거나 별도 선택 혜택/프로모션이 있으면 확인 필요로 두세요. 포인트·마일은 원화로 환산하지 않고 단위별로 비교합니다. 본인·가족 공유 한도는 모든 관련 카드의 사용 혜택을 포함하세요.</p>
+            <form id="official-form" novalidate>
+              <div class="field"><label for="official-card">개인별 정보를 입력할 보유 카드</label><select id="official-card"></select></div>
+              <div id="official-detail" class="catalog-detail" aria-live="polite"></div>
+              <div id="official-inputs" hidden>
+                <div class="form-row feature-actions">
+                  <div class="field"><label for="official-previousMonth">전월 확정 실적의 월</label><input id="official-previousMonth" type="month"></div>
+                  <div class="field"><label for="official-previousSpend">전월 확정 실적 (원)</label><input id="official-previousSpend" inputmode="numeric"></div>
+                  <div class="field"><label for="official-memberStatus">신규회원 실적 유예</label><select id="official-memberStatus"><option value="">확인 필요</option><option value="standard">유예 적용 없음 (일반 조건)</option><option value="grace">안내장 신규 유예 대상임을 확인</option></select></div>
+                </div>
+                <label class="check-line"><input id="official-previousConfirmed" type="checkbox"> 카드사에서 확인한 전월 확정 실적입니다. 안내장 실적 범위(국내/국내외)와 본인·가족 합산을 확인했습니다.</label>
+                <label class="check-line"><input id="official-graceConfirmed" type="checkbox"> 신규 유예 선택 시: 최초 사용 등록일부터 다음 달 말일까지의 대상이며, 재발급/적용 예외와 구간을 확인했습니다.</label>
+                <h4>결제 월에 이미 사용한 혜택</h4><p class="muted">이번 결제 예정 월의 차감된 혜택입니다. 한도를 직접 입력할 필요는 없습니다. 관련 그룹/통합 값을 확인해 0도 명시해 주세요. 빈 값은 산정하지 않습니다.</p>
+                <div id="official-used" class="form-row"></div>
+                <div id="official-counts" class="field feature-actions"></div>
+                <div id="official-billing" hidden class="feature-panel">
+                  <h4>에어 플러스: 결제월 별도 대상합계</h4><p class="muted">기본과 보너스의 제외 항목이 다릅니다. 이 결제가 포함되는 청구/결제 월의 대상합계를 각각 확인해야 합니다.</p>
+                  <div class="form-row"><div class="field"><label for="official-billingMonth">청구/결제 월</label><input id="official-billingMonth" type="month"></div><div class="field"><label for="official-billingBase">이번 거래 전 기본적립 대상합계 (원)</label><input id="official-billingBase" inputmode="numeric"></div><div class="field"><label for="official-billingBonus">이번 거래 전 보너스 대상합계 (원)</label><input id="official-billingBonus" inputmode="numeric"></div></div>
+                  <label class="check-line"><input id="official-billingConfirmed" type="checkbox"> 같은 결제월 대상합계를 기본·보너스 제외조건에 따라 각각 확인했습니다.</label>
+                </div>
+                <label class="check-line"><input id="official-versionConfirmed" type="checkbox"> 위 공식 안내장 버전과 조건이 내가 보유한 상품에 적용됨을 확인했습니다. 다른 약관/개인 선택 옵션이 있으면 체크하지 않습니다.</label>
+                <label class="check-line"><input id="official-exclusionsConfirmed" type="checkbox"> 이번 결제의 실제 업종·가맹점·결제 방식과 제외조건을 확인했습니다. 상품권·선불·무이자·임대매장·제약업종 상한·다른 할인/프로모션 등 미확인 예외가 없습니다. 추가 적용 조건은 공식 안내에서 확인했습니다.</label>
+                <button class="btn secondary" type="submit">개인별 확인 정보 보관</button>
+              </div>
+              <p id="official-status" class="muted" role="status">안내장 조건은 자동 적용합니다. 개인별 정보는 화면 메모리에만 보관합니다.</p>
+            </form>
+          </details>
+          <details class="benefit-details" hidden open>
+            <summary>카드별로 확인한 할인 조건 입력</summary>
+            <p class="muted">카드사에서 확인한 전월 확정 실적과 <strong>이번 결제에 적용되는</strong> 할인률·월 한도를 입력하세요. 이번 달 분석 합계는 전월 실적으로 대신 사용하지 않습니다. 조건과 실적은 화면 안에서만 유지되며 새로고침하면 지워집니다.</p>
+            <form id="benefit-form" novalidate>
+              <div class="field"><label for="benefit-card">조건을 입력할 보유 카드</label><select id="benefit-card"></select></div>
+              <div class="form-row feature-actions">
+                <div class="field"><label for="benefit-scope">대상 사용처 (쉼표로 구분, 이름 정확히 일치)</label><input id="benefit-scope" maxlength="300" placeholder="예: 커피매장, 서점 (*는 모든 사용처)"></div>
+                <div class="field"><label for="benefit-rate">할인률 (%)</label><input id="benefit-rate" inputmode="decimal" placeholder="카드사에서 확인한 값"></div>
+                <div class="field"><label for="benefit-minimum">이 혜택의 전월 요구 실적 (원, 없으면 0)</label><input id="benefit-minimum" inputmode="numeric"></div>
+              </div>
+              <div class="form-row feature-actions">
+                <div class="field"><label for="benefit-previousMonth">확정 실적의 월 (결제 월의 바로 전월)</label><input id="benefit-previousMonth" type="month"></div>
+                <div class="field"><label for="benefit-previousSpend">카드사에서 확인한 해당 월 확정 실적 (원)</label><input id="benefit-previousSpend" inputmode="numeric"></div>
+                <div class="field"><label for="benefit-capMode">이 정률 할인의 월 혜택 한도</label><select id="benefit-capMode"><option value="">확인 필요</option><option value="limited">한도 있음</option><option value="none">한도 없음으로 확인</option></select></div>
+                <div class="field"><label for="benefit-cap">월 혜택 한도 (원)</label><input id="benefit-cap" inputmode="numeric"></div>
+                <div class="field"><label for="benefit-used">결제 월에 이미 사용한 해당 혜택 (원)</label><input id="benefit-used" inputmode="numeric"></div>
+              </div>
+              <label class="check-line"><input id="benefit-previousConfirmed" type="checkbox"> 해당 전월 실적은 카드사에서 확인한 확정값입니다.</label>
+              <label class="check-line"><input id="benefit-confirmed" type="checkbox"> 이번 결제의 가맹점·결제 방식·제외 조건을 확인했고, 건별/통합/구간별 한도 등 지원하지 않는 추가 조건이 없는 단일 정률 할인입니다.</label>
+              <button class="btn secondary" type="submit">이 카드 조건 보관</button><p id="benefit-status" class="muted" role="status"></p>
+            </form>
+          </details>
+          <form id="purchase-form" novalidate>
+          <div id="purchase-official-context">
+            <div class="form-row feature-actions"><div class="field"><label for="purchase-category">실제 업종 / 혜택 영역</label><select id="purchase-category"></select></div><div class="field"><label for="purchase-channel">결제 방식</label><select id="purchase-channel"></select></div><div class="field"><label for="purchase-provider">간편결제명 (해당 시)</label><input id="purchase-provider" maxlength="40" placeholder="예: 카카오페이"></div><div class="field"><label for="purchase-time">승인 예정 시간 (점심 할인 시)</label><input id="purchase-time" type="time"></div></div>
+            <label class="check-line"><input id="purchase-category-confirmed" type="checkbox"> 선택한 업종·혜택 영역과 결제 방식이 실제 거래에 해당함을 확인했습니다. 가맹점명만으로 카드사 업종을 확정하지 않습니다.</label>
+          </div>
+
+            <div class="form-row feature-actions">
+              <div class="field"><label for="purchase-merchant">결제 예정 사용처</label><input id="purchase-merchant" maxlength="100" placeholder="예: 커피매장"></div>
+              <div class="field"><label for="purchase-amount">결제 예정 금액 (원)</label><input id="purchase-amount" inputmode="numeric"></div>
+              <div class="field"><label for="purchase-month">결제 예정 월</label><input id="purchase-month" type="month"></div>
+              <button class="btn" type="submit">입력 조건으로 예상 혜택 비교</button>
+            </div>
+          </form>
+          <p id="purchase-status" class="muted" role="status">모든 보유 카드의 조건을 확인해 주세요. 부족한 정보는 추측해서 채우지 않습니다.</p>
+          <div id="purchase-results" hidden>
+            <h4 id="purchase-title" aria-live="polite"></h4>
+            <aside class="recommendation-warning" id="purchase-result-warning" aria-labelledby="result-warning-title"><h4 id="result-warning-title">추천 결과의 한계</h4><strong>누락된 사용 내역이나 혜택 한도 정보가 있으면 실제 결과와 달라질 수 있습니다.</strong></aside>
+            <div class="table-wrap"><table><thead><tr><th>보유 카드</th><th>예상 할인</th><th>선정 이유 / 확인할 조건</th></tr></thead><tbody id="purchase-rows"></tbody></table></div>
+            <p class="muted">확정적인 최적 카드나 절약액을 보장하지 않습니다. 실제 결제는 진행하지 않습니다.</p>
+          </div>
+        </section>
         <div class="upload-box">
           <h3 style="margin:0 0 6px;font-size:17px;">CSV가 없어도 이용내역 캡처로 확인</h3>
-          <p class="muted" style="margin:0 0 12px;">카드사 앱의 거래 목록 화면을 이미지로 선택하세요. 인식된 날짜·가맹점·금액을 확인하고 수정한 뒤 분석합니다. 이름, 카드번호, 계좌번호, 승인번호 등은 먼저 가려 주세요. 인식이 틀릴 수 있으니 원본과 대조해야 합니다.</p>
+          <p class="muted" style="margin:0 0 12px;">카드사 앱의 거래 목록 화면을 이미지로 선택하세요. 인식된 날짜·가맹점·금액을 확인하고 수정한 뒤 분석합니다. 이름, 전체 카드번호, 계좌번호, 승인번호 등은 먼저 가려 주세요. 자동 카드 구분을 원하면 카드사와 끝 4자리만 남겨 주세요. 인식이 틀릴 수 있으니 원본과 대조해야 합니다.</p>
           <div class="form-row"><div class="field"><label for="statement-images">이용내역 캡처 이미지 (최대 5장)</label><input id="statement-images" type="file" accept="image/*" multiple></div><button class="btn secondary" id="read-images" type="button">캡처 읽기</button></div>
           <p id="image-status" class="muted" aria-live="polite">이미지 OCR을 시작할 때 한국어 인식 엔진을 불러옵니다. 이미지 파일은 이 브라우저에서 직접 읽습니다.</p>
           <div id="ocr-review" hidden><label for="ocr-text" class="muted">인식 결과 (필요하면 텍스트를 고친 후 아래 거래 추출)</label><textarea id="ocr-text" rows="7" style="width:100%;font:inherit;border:1px solid #cbd3df;border-radius:8px;padding:10px;"></textarea><div style="margin-top:10px;"><button class="btn" id="extract-images" type="button">거래 후보 추출 및 분석</button></div></div>
@@ -158,7 +253,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
             <div class="summary-card"><div class="summary-label">전체 거래</div><div class="summary-value" id="sum-count">0건</div></div>
           </div>
           <section style="margin-top:24px;padding:20px;border:1px solid #dbe3f0;border-radius:14px;background:#fafbfe;">
-            <h3 style="margin:0;font-size:18px;">여러 카드 통합 비교</h3>
+            <h3 style="margin:0;font-size:18px;">동일 거래의 실적 규칙 비교</h3>
             <p class="muted">비교할 상품을 2개 이상 고르면 같은 거래내역을 각 카드 규칙으로 따로 판정합니다. 카드 규칙은 공식 안내의 등록된 항목을 기준으로 한 예상치입니다.</p>
             <div id="compare-products" aria-label="비교할 카드 상품 선택"></div>
             <button class="btn" id="compare-cards" type="button" style="margin-top:16px;">선택한 카드 비교</button>
@@ -345,7 +440,7 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8"><path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
           <div style="font-size:16px;font-weight:700;">분석 초기화</div>
-          <div style="font-size:14px;line-height:1.6;color:#5B6472;">분석 내용은 페이지 새로고침 시 사라집니다. 결과 화면의 초기화 버튼으로 바로 비울 수 있습니다.</div>
+          <div style="font-size:14px;line-height:1.6;color:#5B6472;">거래 내역·추천 조건·실적은 새로고침 또는 분석 초기화 시 사라집니다. 카드사·끝 4자리·상품 연결은 이 브라우저에 저장되며 내 카드 연결에서 따로 해제할 수 있습니다. 서버로 전송하지 않습니다.</div>
         </div>
 
       </div>
@@ -388,6 +483,8 @@ table{width:100%;border-collapse:collapse;min-width:850px;font-size:13px}th,td{p
 </div>
 
 <script src="card-rules.js" defer></script>
+<script src="bc-benefits.js" defer></script>
+<script src="card-tools.js" defer></script>
 <script src="cardpilot.js" defer></script>
 
 </body>
